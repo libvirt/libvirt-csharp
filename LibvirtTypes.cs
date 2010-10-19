@@ -7,6 +7,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace LibvirtBindings
@@ -90,7 +92,7 @@ namespace LibvirtBindings
     ///<param name="ncred">number of virConnectCredential in cred</param>
     ///<param name="cbdata">user data passed to callback</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int virConnectAuthCallbackPtr([In, Out] IntPtr cred, uint ncred, IntPtr cbdata);
+    public delegate int virConnectAuthCallback(IntPtr cred, uint ncred, IntPtr cbdata);
     #endregion
 
     #region structs
@@ -171,28 +173,71 @@ namespace LibvirtBindings
         /// <summary>
         /// List of supported virConnectCredentialType values, should be a IntPtr to an int array or to a virConnectCredentialType array
         /// </summary>
-        public IntPtr credtypes;
+        private IntPtr credtypes;
         ///<summary>
         /// Number of virConnectCredentialType in credtypes
         ///</summary>
-        [MarshalAs(UnmanagedType.I4)]
-        public int ncredtype;
+        [MarshalAs(UnmanagedType.U4)]
+        private uint ncredtype;
         ///<summary>
         /// Callback used to collect credentials, a virConnectAuthCallback delegate in bindings
         ///</summary>
         [MarshalAs(UnmanagedType.FunctionPtr)]
-        public virConnectAuthCallbackPtr cb;
+        public virConnectAuthCallback cb;
         ///<summary>
         /// Data transported with callback, should be a IntPtr on what you want
         ///</summary>
-        public IntPtr cbdata;
+        private IntPtr cbdataPtr;
+        ///<summary>
+        /// Data transported with callback, should be a IntPtr on what you want
+        ///</summary>
+        public Object cbdata
+        {
+            get
+            {
+                return Marshal.PtrToStructure(cbdataPtr, typeof(Object));
+            }
+            set
+            {
+                cbdataPtr = Marshal.AllocHGlobal(Marshal.SizeOf(value));
+                Marshal.StructureToPtr(value, cbdataPtr, false);
+            }
+        }
+        /// <summary>
+        /// List of supported virConnectCredentialType values
+        /// </summary>
+        public virConnectCredentialType[] CredTypes
+        {
+            get
+            {
+                int[] intCredTypes = new int[ncredtype];
+                Marshal.Copy(credtypes, intCredTypes, 0, (int)ncredtype);
+				virConnectCredentialType[] result = new virConnectCredentialType[ncredtype];
+				for (int i=0; i< intCredTypes.Length; i++)
+				{
+					result[i] = (virConnectCredentialType)i;
+				}
+                return result;
+            }
+            set
+            {
+                ncredtype = (uint)value.Length;
+                credtypes = Marshal.AllocHGlobal(value.Length * sizeof(int));
+				int[] vals = new int[value.Length];
+				for (int i=0; i<value.Length; i++)
+				{
+					vals[i] = (int)value[i];
+				}
+                Marshal.Copy(vals, 0, credtypes, (int)ncredtype);
+            }
+        }
     }
 
     ///<summary>
     /// Credential structure
     ///</summary>
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
-    public struct virConnectCredential
+    [StructLayout(LayoutKind.Sequential)]
+    public class virConnectCredential
     {
         ///<summary>
         /// One of virConnectCredentialType constants
@@ -202,27 +247,72 @@ namespace LibvirtBindings
         ///<summary>
         /// Prompt to show to user
         ///</summary>
-        [MarshalAs(UnmanagedType.LPStr)]
-        public string prompt;
+        //[MarshalAs(UnmanagedType.LPStr)]
+        private IntPtr prompt;
         ///<summary>
         /// Additional challenge to show
         ///</summary>
-        [MarshalAs(UnmanagedType.LPStr)]
-        public string challenge;
+        //[MarshalAs(UnmanagedType.LPStr)]
+        private IntPtr challenge;
         ///<summary>
         /// Optional default result
         ///</summary>
-        [MarshalAs(UnmanagedType.LPStr)]
-        public string defresult;
+        //[MarshalAs(UnmanagedType.LPStr)]
+        private IntPtr defresult;
         ///<summary>
         /// Result to be filled with user response (or defresult). An IntPtr to a marshalled allocated string
         ///</summary>
-        public IntPtr result;
+        //[MarshalAs(UnmanagedType.LPStr)]
+        private IntPtr result;
         ///<summary>
         /// Length of the result
         ///</summary>
         [MarshalAs(UnmanagedType.U4)]
         public uint resultlen;
+        ///<summary>
+        /// Prompt to show to user
+        ///</summary>
+        public string Prompt
+        {
+            get
+            {
+                return Marshal.PtrToStringAnsi(prompt);
+            }
+        }
+        ///<summary>
+        /// Additional challenge to show
+        ///</summary>
+        public string Challenge
+        {
+            get
+            {
+                return Marshal.PtrToStringAnsi(challenge);
+            }
+        }
+        ///<summary>
+        /// Optional default result
+        ///</summary>
+        public string Defresult
+        {
+            get
+            {
+                return Marshal.PtrToStringAnsi(defresult);
+            }
+        }
+        ///<summary>
+        /// Result to be filled with user response (or defresult).
+        ///</summary>
+        public string Result
+        {
+            get
+            {
+                return Marshal.PtrToStringAnsi(result);
+            }
+            set
+            {
+                result = libVirt.StrDup(Marshal.StringToHGlobalAnsi(value));
+            }
+        }
     }
 
     ///<summary>
@@ -402,22 +492,22 @@ namespace LibvirtBindings
         /// </summary>
         VIR_DOMAIN_MEMORY_STAT_SWAP_IN = 0,
         /// <summary>
-        /// * Page faults occur when a process makes a valid access to virtual memory * that is not available. When servicing the page fault, if disk IO is * required, it is considered a major fault. If not, it is a minor fault. * These are expressed as the number of faults that have occurred. *
+        /// * Page faults occur when a process makes a valid access to virtual memory * that is not available. When servicing the page fault, if disk IO is * required, it is considered a major fault. If not, it is a minor fault. * These are expressed as the number of faults that have occurred. * 
         /// </summary>
         VIR_DOMAIN_MEMORY_STAT_SWAP_OUT = 1,
 #pragma warning disable 1591
         VIR_DOMAIN_MEMORY_STAT_MAJOR_FAULT = 2,
 #pragma warning restore 1591
         /// <summary>
-        /// * The amount of memory left completely unused by the system. Memory that * is available but used for reclaimable caches should NOT be reported as * free. This value is expressed in kB. *
+        /// * The amount of memory left completely unused by the system. Memory that * is available but used for reclaimable caches should NOT be reported as * free. This value is expressed in kB. * 
         /// </summary>
         VIR_DOMAIN_MEMORY_STAT_MINOR_FAULT = 3,
         /// <summary>
-        /// * The total amount of usable memory as seen by the domain. This value * may be less than the amount of memory assigned to the domain if a * balloon driver is in use or if the guest OS does not initialize all * assigned pages. This value is expressed in kB. *
+        /// * The total amount of usable memory as seen by the domain. This value * may be less than the amount of memory assigned to the domain if a * balloon driver is in use or if the guest OS does not initialize all * assigned pages. This value is expressed in kB. * 
         /// </summary>
         VIR_DOMAIN_MEMORY_STAT_UNUSED = 4,
         /// <summary>
-        /// * The number of statistics supported by this version of the interface. * To add new statistics, add them to the enum and increase this value. *
+        /// * The number of statistics supported by this version of the interface. * To add new statistics, add them to the enum and increase this value. * 
         /// </summary>
         VIR_DOMAIN_MEMORY_STAT_AVAILABLE = 5,
 #pragma warning disable 1591
