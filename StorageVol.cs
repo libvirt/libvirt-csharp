@@ -33,7 +33,7 @@ namespace Libvirt
         public static extern IntPtr CreateXML(IntPtr pool, string xmldesc, uint flags);
 
         /// <summary>
-        /// Create a storage volume in the parent pool, using the 'clonevol' volume as input. 
+        /// Create a storage volume in the parent pool, using the 'clonevol' volume as input.
         /// Information for the new volume (name, perms) are passed via a typical volume XML description.
         /// </summary>
         /// <param name="pool">
@@ -82,9 +82,9 @@ namespace Libvirt
         public static extern int Free(IntPtr vol);
 
         /// <summary>
-        /// Provides the connection pointer associated with a storage volume. 
-        /// The reference counter on the connection is not increased by this call. 
-        /// WARNING: When writing libvirt bindings in other languages, do not use this function. 
+        /// Provides the connection pointer associated with a storage volume.
+        /// The reference counter on the connection is not increased by this call.
+        /// WARNING: When writing libvirt bindings in other languages, do not use this function.
         /// Instead, store the connection and the volume object together.
         /// </summary>
         /// <param name="vol">
@@ -112,7 +112,7 @@ namespace Libvirt
         public static extern int GetInfo(IntPtr vol, ref virStorageVolInfo info);
 
         /// <summary>
-        /// Fetch the storage volume key. 
+        /// Fetch the storage volume key.
         /// This is globally unique, so the same volume will have the same key no matter what host it is accessed from
         /// </summary>
         /// <param name="vol">
@@ -139,9 +139,9 @@ namespace Libvirt
         public static extern string GetName(IntPtr vol);
 
         /// <summary>
-        /// Fetch the storage volume path. 
-        /// Depending on the pool configuration this is either persistent across hosts, 
-        /// or dynamically assigned at pool startup. 
+        /// Fetch the storage volume path.
+        /// Depending on the pool configuration this is either persistent across hosts,
+        /// or dynamically assigned at pool startup.
         /// Consult pool documentation for information on getting the persistent naming.
         /// </summary>
         /// <param name="vol">
@@ -216,11 +216,11 @@ namespace Libvirt
         public static extern IntPtr LookupByPath(IntPtr conn, string path);
 
         /// <summary>
-        /// Increment the reference count on the vol. For each additional call to this method, 
-        /// there shall be a corresponding call to virStorageVolFree to release the reference count, 
-        /// once the caller no longer needs the reference to this object. 
-        /// This method is typically useful for applications where multiple threads are using a connection, 
-        /// and it is required that the connection remain open until all threads have finished using it. ie, 
+        /// Increment the reference count on the vol. For each additional call to this method,
+        /// there shall be a corresponding call to virStorageVolFree to release the reference count,
+        /// once the caller no longer needs the reference to this object.
+        /// This method is typically useful for applications where multiple threads are using a connection,
+        /// and it is required that the connection remain open until all threads have finished using it. ie,
         /// each new thread using a vol would increment the reference count.
         /// </summary>
         /// <param name="vol">

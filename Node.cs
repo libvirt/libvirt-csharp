@@ -14,7 +14,7 @@ namespace Libvirt
     public class Node
     {
 		private const int MaxStringLength = 1024;
-		
+
         // TODO virNodeDeviceCreateXML
 
         // TODO virNodeDeviceDestroy
@@ -58,7 +58,7 @@ namespace Libvirt
         // TODO virNodeGetCellsFreeMemory
 
         /// <summary>
-        /// Provides the free memory available on the Node Note: most libvirt APIs provide memory sizes in kilobytes, 
+        /// Provides the free memory available on the Node Note: most libvirt APIs provide memory sizes in kilobytes,
         /// but in this function the returned value is in bytes. Divide by 1024 as necessary.
         /// </summary>
         /// <param name="conn">
@@ -142,7 +142,7 @@ namespace Libvirt
             return count;
         }
         /// <summary>
-        /// Provides the number of node devices. If the optional 'cap' argument is non-NULL, 
+        /// Provides the number of node devices. If the optional 'cap' argument is non-NULL,
         /// then the count will be restricted to devices with the specified capability.
         /// </summary>
         /// <param name="conn">

@@ -195,7 +195,7 @@ namespace Libvirt
         public int int2;
         /// <summary>
         /// Network if available, deprecated see note above.
-        /// </summary>     
+        /// </summary>
         [MarshalAs(UnmanagedType.SysInt)]
         public IntPtr net;
     }
@@ -1036,22 +1036,22 @@ namespace Libvirt
         /// </summary>
         VIR_DOMAIN_MEMORY_STAT_SWAP_IN = 0,
         /// <summary>
-        /// * Page faults occur when a process makes a valid access to virtual memory * that is not available. When servicing the page fault, if disk IO is * required, it is considered a major fault. If not, it is a minor fault. * These are expressed as the number of faults that have occurred. * 
+        /// * Page faults occur when a process makes a valid access to virtual memory * that is not available. When servicing the page fault, if disk IO is * required, it is considered a major fault. If not, it is a minor fault. * These are expressed as the number of faults that have occurred. *
         /// </summary>
         VIR_DOMAIN_MEMORY_STAT_SWAP_OUT = 1,
 #pragma warning disable 1591
         VIR_DOMAIN_MEMORY_STAT_MAJOR_FAULT = 2,
 #pragma warning restore 1591
         /// <summary>
-        /// * The amount of memory left completely unused by the system. Memory that * is available but used for reclaimable caches should NOT be reported as * free. This value is expressed in kB. * 
+        /// * The amount of memory left completely unused by the system. Memory that * is available but used for reclaimable caches should NOT be reported as * free. This value is expressed in kB. *
         /// </summary>
         VIR_DOMAIN_MEMORY_STAT_MINOR_FAULT = 3,
         /// <summary>
-        /// * The total amount of usable memory as seen by the domain. This value * may be less than the amount of memory assigned to the domain if a * balloon driver is in use or if the guest OS does not initialize all * assigned pages. This value is expressed in kB. * 
+        /// * The total amount of usable memory as seen by the domain. This value * may be less than the amount of memory assigned to the domain if a * balloon driver is in use or if the guest OS does not initialize all * assigned pages. This value is expressed in kB. *
         /// </summary>
         VIR_DOMAIN_MEMORY_STAT_UNUSED = 4,
         /// <summary>
-        /// * The number of statistics supported by this version of the interface. * To add new statistics, add them to the enum and increase this value. * 
+        /// * The number of statistics supported by this version of the interface. * To add new statistics, add them to the enum and increase this value. *
         /// </summary>
         VIR_DOMAIN_MEMORY_STAT_AVAILABLE = 5,
 #pragma warning disable 1591

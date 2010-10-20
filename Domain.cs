@@ -65,7 +65,7 @@ namespace Libvirt
         public static extern int Create(IntPtr domain);
         /// <summary>
         /// Launch a new guest domain, based on an XML description similar to the one returned by virDomainGetXMLDesc().
-        /// This function may requires privileged access to the hypervisor. The domain is not persistent, 
+        /// This function may requires privileged access to the hypervisor. The domain is not persistent,
         /// so its definition will disappear when it is destroyed, or if the host is restarted (see virDomainDefineXML() to define persistent domains).
         /// </summary>
         /// <param name="conn">
@@ -83,7 +83,7 @@ namespace Libvirt
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainCreateXML")]
         public static extern IntPtr CreateXML(IntPtr conn, string xmlDesc, uint flags);
         /// <summary>
-        /// Define a domain, but does not start it. This definition is persistent, until explicitly undefined with virDomainUndefine(). 
+        /// Define a domain, but does not start it. This definition is persistent, until explicitly undefined with virDomainUndefine().
         /// A previous definition for this domain would be overriden if it already exists.
         /// </summary>
         /// <param name="conn">
@@ -98,8 +98,8 @@ namespace Libvirt
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainDefineXML")]
         public static extern IntPtr DefineXML(IntPtr conn, string xml);
         /// <summary>
-        /// Destroy the domain object. The running instance is shutdown if not down already 
-        /// and all resources used by it are given back to the hypervisor. 
+        /// Destroy the domain object. The running instance is shutdown if not down already
+        /// and all resources used by it are given back to the hypervisor.
         /// This does not free the associated virDomainPtr object. This function may require privileged access
         /// </summary>
         /// <param name="domain">
@@ -159,9 +159,9 @@ namespace Libvirt
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainGetAutostart")]
         public static extern int GetAutostart(IntPtr domain, out int autostart);
         /// <summary>
-        /// Provides the connection pointer associated with a domain. 
-        /// The reference counter on the connection is not increased by this call. 
-        /// WARNING: When writing libvirt bindings in other languages, do not use this function. 
+        /// Provides the connection pointer associated with a domain.
+        /// The reference counter on the connection is not increased by this call.
+        /// WARNING: When writing libvirt bindings in other languages, do not use this function.
         /// Instead, store the connection and the domain object together.
         /// </summary>
         /// <param name="dom">
@@ -184,7 +184,7 @@ namespace Libvirt
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainGetID")]
         public static extern int GetID(IntPtr domain);
         /// <summary>
-        /// Extract information about a domain. Note that if the connection used to get the domain is limited only a 
+        /// Extract information about a domain. Note that if the connection used to get the domain is limited only a
         /// partial set of the information can be extracted.
         /// </summary>
         /// <param name="domain">
@@ -199,7 +199,7 @@ namespace Libvirt
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainGetInfo")]
         public static extern int GetInfo(IntPtr domain, [Out] virDomainInfo info);
         /// <summary>
-        /// Retrieve the maximum amount of physical memory allocated to a domain. 
+        /// Retrieve the maximum amount of physical memory allocated to a domain.
         /// If domain is NULL, then this get the amount of memory reserved to Domain0 i.e. the domain where the application runs.
         /// </summary>
         /// <param name="domain">
@@ -211,8 +211,8 @@ namespace Libvirt
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainGetMaxMemory")]
         public static extern ulong GetMaxMemory(IntPtr domain);
         /// <summary>
-        /// Provides the maximum number of virtual CPUs supported for the guest VM. 
-        /// If the guest is inactive, this is basically the same as virConnectGetMaxVcpus. 
+        /// Provides the maximum number of virtual CPUs supported for the guest VM.
+        /// If the guest is inactive, this is basically the same as virConnectGetMaxVcpus.
         /// If the guest is running this will reflect the maximum number of virtual CPUs the guest was booted with.
         /// </summary>
         /// <param name="domain">
@@ -301,10 +301,10 @@ namespace Libvirt
         [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
         public static extern string GetXMLDesc(IntPtr domain, int flags);
         /// <summary>
-        /// This function returns network interface stats for interfaces attached to the domain. 
-        /// The path parameter is the name of the network interface. Domains may have more than one network interface. 
-        /// To get stats for each you should make multiple calls to this function. 
-        /// Individual fields within the stats structure may be returned as -1, 
+        /// This function returns network interface stats for interfaces attached to the domain.
+        /// The path parameter is the name of the network interface. Domains may have more than one network interface.
+        /// To get stats for each you should make multiple calls to this function.
+        /// Individual fields within the stats structure may be returned as -1,
         /// which indicates that the hypervisor does not support that particular statistic.
         /// </summary>
         /// <param name="dom">
@@ -350,7 +350,7 @@ namespace Libvirt
 
         /// <summary>
         /// Try to find a domain based on the hypervisor ID number.
-        /// Note that this won't work for inactive domains which have an ID of -1, 
+        /// Note that this won't work for inactive domains which have an ID of -1,
         /// in that case a lookup based on the Name or UUId need to be done instead.
         /// </summary>
         /// <param name="conn">
@@ -421,7 +421,7 @@ namespace Libvirt
         // TODO virDomainMemoryStats
 
         /// <summary>
-        /// Reboot a domain, the domain object is still usable there after but the domain OS is being stopped for a restart. 
+        /// Reboot a domain, the domain object is still usable there after but the domain OS is being stopped for a restart.
         /// Note that the guest OS may ignore the request.
         /// </summary>
         /// <param name="domain">
@@ -437,11 +437,11 @@ namespace Libvirt
         public static extern int Reboot(IntPtr domain, uint flags);
 
         /// <summary>
-        /// Increment the reference count on the domain. For each additional call to this method, 
-        /// there shall be a corresponding call to virDomainFree to release the reference count, 
-        /// once the caller no longer needs the reference to this object. 
-        /// This method is typically useful for applications where multiple threads are using a connection, 
-        /// and it is required that the connection remain open until all threads have finished using it. ie, 
+        /// Increment the reference count on the domain. For each additional call to this method,
+        /// there shall be a corresponding call to virDomainFree to release the reference count,
+        /// once the caller no longer needs the reference to this object.
+        /// This method is typically useful for applications where multiple threads are using a connection,
+        /// and it is required that the connection remain open until all threads have finished using it. ie,
         /// each new thread using a domain would increment the reference count.
         /// </summary>
         /// <param name="domain">
@@ -469,7 +469,7 @@ namespace Libvirt
         public static extern int Restore(IntPtr conn, string from);
 
         /// <summary>
-        /// Resume a suspended domain, the process is restarted from the state where it was frozen by calling virSuspendDomain(). 
+        /// Resume a suspended domain, the process is restarted from the state where it was frozen by calling virSuspendDomain().
         /// This function may requires privileged access
         /// </summary>
         /// <param name="domain">
@@ -482,7 +482,7 @@ namespace Libvirt
         public static extern int Resume(IntPtr domain);
 
         /// <summary>
-        /// This method will suspend a domain and save its memory contents to a file on disk. After the call, if successful, 
+        /// This method will suspend a domain and save its memory contents to a file on disk. After the call, if successful,
         /// the domain is not listed as running anymore (this may be a problem). Use virDomainRestore() to restore a domain after saving.
         /// </summary>
         /// <param name="domain">
@@ -513,8 +513,8 @@ namespace Libvirt
         public static extern int SetAutostart(IntPtr domain, int autostart);
 
         /// <summary>
-        /// Dynamically change the maximum amount of physical memory allocated to a domain. 
-        /// If domain is NULL, then this change the amount of memory reserved to Domain0 i.e. 
+        /// Dynamically change the maximum amount of physical memory allocated to a domain.
+        /// If domain is NULL, then this change the amount of memory reserved to Domain0 i.e.
         /// the domain where the application runs. This function requires privileged access to the hypervisor.
         /// </summary>
         /// <param name="domain">
@@ -530,8 +530,8 @@ namespace Libvirt
         public static extern int SetMaxMemory(IntPtr domain, ulong memory);
 
         /// <summary>
-        /// Dynamically change the target amount of physical memory allocated to a domain. 
-        /// If domain is NULL, then this change the amount of memory reserved to Domain0 i.e. 
+        /// Dynamically change the target amount of physical memory allocated to a domain.
+        /// If domain is NULL, then this change the amount of memory reserved to Domain0 i.e.
         /// the domain where the application runs. This function may requires privileged access to the hypervisor.
         /// </summary>
         /// <param name="domain">
@@ -549,8 +549,8 @@ namespace Libvirt
         // TODO virDomainSetSchedulerParameters
 
         /// <summary>
-        /// Dynamically change the number of virtual CPUs used by the domain. 
-        /// Note that this call may fail if the underlying virtualization hypervisor does not support it 
+        /// Dynamically change the number of virtual CPUs used by the domain.
+        /// Note that this call may fail if the underlying virtualization hypervisor does not support it
         /// or if growing the number is arbitrary limited. This function requires privileged access to the hypervisor.
         /// </summary>
         /// <param name="domain">
@@ -566,8 +566,8 @@ namespace Libvirt
         public static extern int SetVcpus(IntPtr domain, uint nvcpus);
 
         /// <summary>
-        /// Shutdown a domain, the domain object is still usable there after but the domain OS is being stopped. 
-        /// Note that the guest OS may ignore the request. 
+        /// Shutdown a domain, the domain object is still usable there after but the domain OS is being stopped.
+        /// Note that the guest OS may ignore the request.
         /// </summary>
         /// <param name="domain">
         /// A <see cref="IntPtr"/>domain object.
@@ -579,8 +579,8 @@ namespace Libvirt
         public static extern int Shutdown(IntPtr domain);
 
         /// <summary>
-        /// Suspends an active domain, the process is frozen without further access to CPU resources and I/O 
-        /// but the memory used by the domain at the hypervisor level will stay allocated. 
+        /// Suspends an active domain, the process is frozen without further access to CPU resources and I/O
+        /// but the memory used by the domain at the hypervisor level will stay allocated.
         /// Use virDomainResume() to reactivate the domain. This function may requires privileged access.
         /// </summary>
         /// <param name="domain">

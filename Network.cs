@@ -14,11 +14,11 @@ namespace Libvirt
     public class Network
     {
         /// <summary>
-        /// Increment the reference count on the network. For each additional call to this method, 
-        /// there shall be a corresponding call to virNetworkFree to release the reference count, 
-        /// once the caller no longer needs the reference to this object. 
-        /// This method is typically useful for applications where multiple threads are using a connection, 
-        /// and it is required that the connection remain open until all threads have finished using it. ie, 
+        /// Increment the reference count on the network. For each additional call to this method,
+        /// there shall be a corresponding call to virNetworkFree to release the reference count,
+        /// once the caller no longer needs the reference to this object.
+        /// This method is typically useful for applications where multiple threads are using a connection,
+        /// and it is required that the connection remain open until all threads have finished using it. ie,
         /// each new thread using a network would increment the reference count.
         /// </summary>
         /// <param name="network">

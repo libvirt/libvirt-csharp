@@ -14,7 +14,7 @@ namespace Libvirt
     public class StoragePool
     {
 		private const int MaxStringLength = 1024;
-		
+
         /// <summary>
         /// Build the underlying storage pool.
         /// </summary>
@@ -46,7 +46,7 @@ namespace Libvirt
         public static extern int Create(IntPtr pool, uint flags);
 
         /// <summary>
-        /// Create a new storage based on its XML description. The pool is not persistent, 
+        /// Create a new storage based on its XML description. The pool is not persistent,
         /// so its definition will disappear when it is destroyed, or if the host is restarted
         /// </summary>
         /// <param name="conn">
@@ -65,7 +65,7 @@ namespace Libvirt
         public static extern IntPtr CreateXML(IntPtr conn, string xmlDesc, uint flags);
 
         /// <summary>
-        /// Define a new inactive storage pool based on its XML description. The pool is persistent, 
+        /// Define a new inactive storage pool based on its XML description. The pool is persistent,
         /// until explicitly undefined.
         /// </summary>
         /// <param name="conn">
@@ -99,9 +99,9 @@ namespace Libvirt
         public static extern int Delete(IntPtr pool, virStoragePoolDeleteFlags flags);
 
         /// <summary>
-        /// Destroy an active storage pool. This will deactivate the pool on the host, 
-        /// but keep any persistent config associated with it. 
-        /// If it has a persistent config it can later be restarted with virStoragePoolCreate(). 
+        /// Destroy an active storage pool. This will deactivate the pool on the host,
+        /// but keep any persistent config associated with it.
+        /// If it has a persistent config it can later be restarted with virStoragePoolCreate().
         /// This does not free the associated virStoragePoolPtr object.
         /// </summary>
         /// <param name="pool">
@@ -139,7 +139,7 @@ namespace Libvirt
         public static extern int GetAutostart(IntPtr pool, out int autotart);
 
         /// <summary>
-        /// Provides the connection pointer associated with a storage pool. The reference counter on the connection is not increased by this call. 
+        /// Provides the connection pointer associated with a storage pool. The reference counter on the connection is not increased by this call.
         /// WARNING: When writing libvirt bindings in other languages, do not use this function. Instead, store the connection and the pool object together.
         /// </summary>
         /// <param name="pool">
@@ -223,7 +223,7 @@ namespace Libvirt
             return new string(uuidArray);
         }
         /// <summary>
-        /// Fetch an XML document describing all aspects of the storage pool. 
+        /// Fetch an XML document describing all aspects of the storage pool.
         /// This is suitable for later feeding back into the virStoragePoolCreateXML method.
         /// </summary>
         /// <param name="pool">
@@ -374,11 +374,11 @@ namespace Libvirt
         public static extern int NumOfVolumes(IntPtr pool);
 
         /// <summary>
-        /// Increment the reference count on the pool. For each additional call to this method, 
-        /// there shall be a corresponding call to virStoragePoolFree to release the reference count, 
-        /// once the caller no longer needs the reference to this object. 
-        /// This method is typically useful for applications where multiple threads are using a connection, 
-        /// and it is required that the connection remain open until all threads have finished using it. ie, 
+        /// Increment the reference count on the pool. For each additional call to this method,
+        /// there shall be a corresponding call to virStoragePoolFree to release the reference count,
+        /// once the caller no longer needs the reference to this object.
+        /// This method is typically useful for applications where multiple threads are using a connection,
+        /// and it is required that the connection remain open until all threads have finished using it. ie,
         /// each new thread using a pool would increment the reference count.
         /// </summary>
         /// <param name="pool">
@@ -391,7 +391,7 @@ namespace Libvirt
         public static extern int Ref(IntPtr pool);
 
         /// <summary>
-        /// Request that the pool refresh its list of volumes. This may involve communicating with a remote server, 
+        /// Request that the pool refresh its list of volumes. This may involve communicating with a remote server,
         /// and/or initializing new devices at the OS layer.
         /// </summary>
         /// <param name="pool">

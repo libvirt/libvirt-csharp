@@ -18,7 +18,7 @@ namespace Libvirt
     public class Error
     {
         /// <summary>
-        /// The error object is kept in thread local storage, so separate threads can safely access this concurrently. 
+        /// The error object is kept in thread local storage, so separate threads can safely access this concurrently.
         /// Reset the last error caught on that connection.
         /// </summary>
         /// <param name="conn">
@@ -28,7 +28,7 @@ namespace Libvirt
         public static extern void virConnResetLastError(IntPtr conn);
 
         /// <summary>
-        /// Set a connection error handling function, if @handler is NULL it will reset to default 
+        /// Set a connection error handling function, if @handler is NULL it will reset to default
         /// which is to pass error back to the global library handler.
         /// </summary>
         /// <param name="conn">
@@ -44,8 +44,8 @@ namespace Libvirt
         public static extern void virConnSetErrorFunc(IntPtr conn, IntPtr userData, [MarshalAs(UnmanagedType.FunctionPtr)]virErrorFunc handler);
 
         /// <summary>
-        /// Copy the content of the last error caught at the library level. 
-        /// The error object is kept in thread local storage, so separate threads can safely access this concurrently. 
+        /// Copy the content of the last error caught at the library level.
+        /// The error object is kept in thread local storage, so separate threads can safely access this concurrently.
         /// One will need to free the result with virResetError().
         /// </summary>
         /// <param name="to">
@@ -76,7 +76,7 @@ namespace Libvirt
         public static extern void virFreeError(virError err); // Does not work, anybody know why?
 
         /// <summary>
-        /// Provide a pointer to the last error caught at the library level. 
+        /// Provide a pointer to the last error caught at the library level.
         /// The error object is kept in thread local storage, so separate threads can safely access this concurrently.
         /// </summary>
         /// <returns>
@@ -95,7 +95,7 @@ namespace Libvirt
         public static extern void virResetError(virError err);
 
         /// <summary>
-        /// Reset the last error caught at the library level. The error object is kept in thread local storage, 
+        /// Reset the last error caught at the library level. The error object is kept in thread local storage,
         /// so separate threads can safely access this concurrently, only resetting their own error object.
         /// </summary>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virResetLastError")]
@@ -105,14 +105,14 @@ namespace Libvirt
         /// Save the last error into a new error object.
         /// </summary>
         /// <returns>
-        /// A <see cref="virError"/> pointer to the copied error or NULL if allocation failed. 
+        /// A <see cref="virError"/> pointer to the copied error or NULL if allocation failed.
         /// It is the caller's responsibility to free the error with virFreeError().
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virSaveLastError")]
         public static extern virError virSaveLastError();
 
         /// <summary>
-        /// Set a library global error handling function, if @handler is NULL, it will reset to default printing on stderr. 
+        /// Set a library global error handling function, if @handler is NULL, it will reset to default printing on stderr.
         /// The error raised there are those for which no handler at the connection level could caught.
         /// </summary>
         /// <param name="userData">
