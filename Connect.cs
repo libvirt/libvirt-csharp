@@ -9,9 +9,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace LibvirtBindings
+namespace Libvirt
 {
-    public class virConnect
+    public class Connect
     {
         private const int MaxStringLength = 1024;
 

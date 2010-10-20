@@ -34,53 +34,53 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="..\..\LibvirtError.cs">
-      <Link>LibvirtError.cs</Link>
-    </Compile>
-    <Compile Include="..\..\LibvirtTypes.cs">
-      <Link>LibvirtTypes.cs</Link>
-    </Compile>
     <Compile Include="..\..\StringWithoutNativeCleanUpMarshaler.cs">
       <Link>StringWithoutNativeCleanUpMarshaler.cs</Link>
     </Compile>
     <Compile Include="..\..\MarshalHelper.cs">
       <Link>MarshalHelper.cs</Link>
     </Compile>
-    <Compile Include="..\..\virConnect.cs">
-      <Link>virConnect.cs</Link>
-    </Compile>
-    <Compile Include="..\..\virDomain.cs">
-      <Link>virDomain.cs</Link>
-    </Compile>
-    <Compile Include="..\..\virEvent.cs">
-      <Link>virEvent.cs</Link>
-    </Compile>
-    <Compile Include="..\..\virInterface.cs">
-      <Link>virInterface.cs</Link>
-    </Compile>
-    <Compile Include="..\..\virLibrary.cs">
-      <Link>virLibrary.cs</Link>
-    </Compile>
-    <Compile Include="..\..\virNetwork.cs">
-      <Link>virNetwork.cs</Link>
-    </Compile>
-    <Compile Include="..\..\virNode.cs">
-      <Link>virNode.cs</Link>
-    </Compile>
-    <Compile Include="..\..\virSecret.cs">
-      <Link>virSecret.cs</Link>
-    </Compile>
-    <Compile Include="..\..\virStoragePool.cs">
-      <Link>virStoragePool.cs</Link>
-    </Compile>
-    <Compile Include="..\..\virStorageVol.cs">
-      <Link>virStorageVol.cs</Link>
-    </Compile>
-    <Compile Include="..\..\virStream.cs">
-      <Link>virStream.cs</Link>
-    </Compile>
     <Compile Include="..\..\NativeFunctions.cs">
       <Link>NativeFunctions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Connect.cs">
+      <Link>Connect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Domain.cs">
+      <Link>Domain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Error.cs">
+      <Link>Error.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Event.cs">
+      <Link>Event.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Interface.cs">
+      <Link>Interface.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Library.cs">
+      <Link>Library.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Network.cs">
+      <Link>Network.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Node.cs">
+      <Link>Node.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Secret.cs">
+      <Link>Secret.cs</Link>
+    </Compile>
+    <Compile Include="..\..\StoragePool.cs">
+      <Link>StoragePool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\StorageVol.cs">
+      <Link>StorageVol.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Stream.cs">
+      <Link>Stream.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Types.cs">
+      <Link>Types.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

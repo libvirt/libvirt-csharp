@@ -9,7 +9,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace LibvirtBindings
+namespace Libvirt
 {
     class StringWithoutNativeCleanUpMarshaler : ICustomMarshaler
     {

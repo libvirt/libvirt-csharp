@@ -6,9 +6,9 @@
  * See COPYING.LIB for the License of this software
  */
 
-namespace LibvirtBindings
+namespace Libvirt
 {
-    public class virSecret
+    public class Secret
     {
         // TODO virSecretDefineXML
 

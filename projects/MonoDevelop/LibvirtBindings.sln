@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{50
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "virConnectOpenAuth", "..\..\examples\MonoDevelop\virConnectOpenAuth\virConnectOpenAuth.csproj", "{3259AE36-B12F-435E-9124-F6CAA781AD5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "virConnectOpen", "..\..\examples\MonoDevelop\virConnectOpen\virConnectOpen.csproj", "{FFCD939E-7F9A-44D5-AEBC-84F40942E8B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,11 +23,16 @@ Global
 		{C51C70EB-9040-4F8E-9A18-DF2A77D04A37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C51C70EB-9040-4F8E-9A18-DF2A77D04A37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C51C70EB-9040-4F8E-9A18-DF2A77D04A37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFCD939E-7F9A-44D5-AEBC-84F40942E8B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFCD939E-7F9A-44D5-AEBC-84F40942E8B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFCD939E-7F9A-44D5-AEBC-84F40942E8B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFCD939E-7F9A-44D5-AEBC-84F40942E8B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3259AE36-B12F-435E-9124-F6CAA781AD5C} = {504BA6A7-9D0E-44BA-827D-D797773347FD}
+		{FFCD939E-7F9A-44D5-AEBC-84F40942E8B5} = {504BA6A7-9D0E-44BA-827D-D797773347FD}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = ..\..\examples\MonoDevelop\virConnectOpenAuth\virConnectOpenAuth.csproj
+		StartupItem = ..\..\examples\MonoDevelop\virConnectOpen\virConnectOpen.csproj
 	EndGlobalSection
 EndGlobal

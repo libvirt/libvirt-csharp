@@ -1,6 +1,20 @@
+/*
+ * Copyright (C)
+ *   Arnaud Champion <arnaud.champion@devatom.fr>
+ *   Jaromír Červenka <cervajz@cervajz.com>
+ *
+ * See COPYING.LIB for the License of this software
+ * 
+ * Sample code for :
+ * Function :
+ *      virConnectOpen
+ *      virConnectNumOfStoragePools
+ *      virConnectListStoragePools
+ */
+
 using System;
 using Gtk;
-using LibvirtBindings;
+using Libvirt;
 using System.Runtime.InteropServices;
 
 public partial class MainWindow : Gtk.Window
@@ -47,14 +61,14 @@ public partial class MainWindow : Gtk.Window
         };
 		
 		// Request the connection
-        IntPtr conn = virConnect.OpenAuth(entry1.Text, ref auth, 0);
+        IntPtr conn = Connect.OpenAuth(entry1.Text, ref auth, 0);
 		
 		if (conn != IntPtr.Zero)
         {
             // Get the number of defined (not running) domains
-            int numOfDefinedDomains = virConnect.NumOfDefinedDomains(conn);
+            int numOfDefinedDomains = Connect.NumOfDefinedDomains(conn);
             string[] definedDomainNames = new string[numOfDefinedDomains];
-            if (virConnect.ListDefinedDomains(conn, ref definedDomainNames, numOfDefinedDomains) == -1)
+            if (Connect.ListDefinedDomains(conn, ref definedDomainNames, numOfDefinedDomains) == -1)
             {
 				ShowError("Unable to list defined domains");
                 return;
@@ -67,9 +81,9 @@ public partial class MainWindow : Gtk.Window
 			}
 			
             // Get the number of running domains
-            int numOfRunningDomain = virConnect.NumOfDomains(conn);
+            int numOfRunningDomain = Connect.NumOfDomains(conn);
             int[] runningDomainIDs = new int[numOfRunningDomain];
-            if (virConnect.ListDomains(conn, runningDomainIDs, numOfRunningDomain) == -1)
+            if (Connect.ListDomains(conn, runningDomainIDs, numOfRunningDomain) == -1)
             {
                 ShowError("Unable to list running domains");
                 return;
@@ -78,13 +92,13 @@ public partial class MainWindow : Gtk.Window
             // Add the domain names to the listbox
             foreach (int runningDomainID in runningDomainIDs)
             {
-                IntPtr domainPtr = virDomain.LookupByID(conn, runningDomainID);
+                IntPtr domainPtr = Domain.LookupByID(conn, runningDomainID);
                 if (domainPtr == IntPtr.Zero)
                 {
                     ShowError("Unable to lookup domains by id");
                     return;
                 }
-                string domainName = virDomain.GetName(domainPtr);
+                string domainName = Domain.GetName(domainPtr);
                 if (string.IsNullOrEmpty(domainName))
                 {
                     ShowError("Unable to get domain name");
@@ -92,7 +106,7 @@ public partial class MainWindow : Gtk.Window
                 }
                 AddDomainInTreeView(domainName);
             }
-            virConnect.Close(conn);
+            Connect.Close(conn);
         }
         else
         {

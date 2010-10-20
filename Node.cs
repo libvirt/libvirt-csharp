@@ -9,9 +9,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace LibvirtBindings
+namespace Libvirt
 {
-    public class virNode
+    public class Node
     {
 		private const int MaxStringLength = 1024;
 		

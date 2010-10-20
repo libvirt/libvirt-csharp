@@ -8,9 +8,9 @@
 
 using System.Runtime.InteropServices;
 
-namespace LibvirtBindings
+namespace Libvirt
 {
-    public class virLibrary
+    public class Library
     {
         /// <summary>
         /// Provides two information back, @libVer is the version of the library while @typeVer will be the version of the hypervisor 

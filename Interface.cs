@@ -6,9 +6,9 @@
  * See COPYING.LIB for the License of this software
  */
 
-namespace LibvirtBindings
+namespace Libvirt
 {
-    public class virInterface
+    public class Interface
     {
         // TODO virInterfaceCreate
 

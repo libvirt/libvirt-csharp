@@ -10,12 +10,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace LibvirtBindings
+namespace Libvirt
 {
     ///<summary>
     /// class for libvirt errors binding
     ///</summary>
-    public class libvirtError
+    public class Error
     {
         /// <summary>
         /// The error object is kept in thread local storage, so separate threads can safely access this concurrently. 

@@ -9,9 +9,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace LibvirtBindings
+namespace Libvirt
 {
-    public class virStorageVol
+    public class StorageVol
     {
 
         /// <summary>

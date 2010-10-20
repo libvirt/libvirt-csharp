@@ -8,9 +8,9 @@
 
 using System.Runtime.InteropServices;
 
-namespace LibvirtBindings
+namespace Libvirt
 {
-    public class virEvent
+    public class Event
     {
         ///<summary>
         /// Function to install callbacks

@@ -9,9 +9,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace LibvirtBindings
+namespace Libvirt
 {
-    public class virDomain
+    public class Domain
     {
         /// <summary>
         /// /// Create a virtual device attachment to backend. This function, having hotplug semantics, is only allowed on an active domain.

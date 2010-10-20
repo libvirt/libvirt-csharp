@@ -1,4 +1,5 @@
 
+*.pidb
 *.userprefs
 *.user
 _ReSharper*

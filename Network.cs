@@ -9,9 +9,9 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace LibvirtBindings
+namespace Libvirt
 {
-    public class virNetwork
+    public class Network
     {
         /// <summary>
         /// Increment the reference count on the network. For each additional call to this method, 
