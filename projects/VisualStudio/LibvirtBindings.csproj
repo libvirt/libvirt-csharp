@@ -21,6 +21,7 @@
     <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,17 +41,53 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Libvirt.cs">
-      <Link>Libvirt.cs</Link>
-    </Compile>
     <Compile Include="..\..\LibvirtError.cs">
       <Link>LibvirtError.cs</Link>
     </Compile>
     <Compile Include="..\..\LibvirtTypes.cs">
       <Link>LibvirtTypes.cs</Link>
     </Compile>
+    <Compile Include="..\..\MarshalHelper.cs">
+      <Link>MarshalHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\NativeFunctions.cs">
+      <Link>NativeFunctions.cs</Link>
+    </Compile>
     <Compile Include="..\..\StringWithoutNativeCleanUpMarshaler.cs">
       <Link>StringWithoutNativeCleanUpMarshaler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\virConnect.cs">
+      <Link>virConnect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\virDomain.cs">
+      <Link>virDomain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\virEvent.cs">
+      <Link>virEvent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\virInterface.cs">
+      <Link>virInterface.cs</Link>
+    </Compile>
+    <Compile Include="..\..\virLibrary.cs">
+      <Link>virLibrary.cs</Link>
+    </Compile>
+    <Compile Include="..\..\virNetwork.cs">
+      <Link>virNetwork.cs</Link>
+    </Compile>
+    <Compile Include="..\..\virNode.cs">
+      <Link>virNode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\virSecret.cs">
+      <Link>virSecret.cs</Link>
+    </Compile>
+    <Compile Include="..\..\virStoragePool.cs">
+      <Link>virStoragePool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\virStorageVol.cs">
+      <Link>virStorageVol.cs</Link>
+    </Compile>
+    <Compile Include="..\..\virStream.cs">
+      <Link>virStream.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

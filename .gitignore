@@ -1,4 +1,6 @@
 
+*.userprefs
+*.user
 _ReSharper*
 *.obj
 *.pdb

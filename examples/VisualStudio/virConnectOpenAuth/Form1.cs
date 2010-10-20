@@ -59,14 +59,14 @@ namespace virConnectOpenAuth
             };
 
             // Request the connection
-            IntPtr conn = libVirt.virConnectOpenAuth(tbURI.Text, ref auth, 0);
+            IntPtr conn = virConnect.OpenAuth(tbURI.Text, ref auth, 0);
 
             if (conn != IntPtr.Zero)
             {
                 // Get the number of defined (not running) domains
-                int numOfDefinedDomains = libVirt.virConnectNumOfDefinedDomains(conn);
+                int numOfDefinedDomains = virConnect.NumOfDefinedDomains(conn);
                 string[] definedDomainNames = new string[numOfDefinedDomains];
-                if (libVirt.virConnectListDefinedDomains(conn, ref definedDomainNames, numOfDefinedDomains) == -1)
+                if (virConnect.ListDefinedDomains(conn, ref definedDomainNames, numOfDefinedDomains) == -1)
                 {
                    MessageBox.Show("Unable to list defined domains", "List defined domains failed", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
@@ -78,9 +78,9 @@ namespace virConnectOpenAuth
                     lbDomains.Items.Add(domainName);
 
                 // Get the number of running domains
-                int numOfRunningDomain = libVirt.virConnectNumOfDomains(conn);
+                int numOfRunningDomain = virConnect.NumOfDomains(conn);
                 int[] runningDomainIDs = new int[numOfRunningDomain];
-                if (libVirt.virConnectListDomains(conn, runningDomainIDs, numOfRunningDomain) == -1)
+                if (virConnect.ListDomains(conn, runningDomainIDs, numOfRunningDomain) == -1)
                 {
                     MessageBox.Show("Unable to list running domains", "List running domains failed", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
@@ -90,14 +90,14 @@ namespace virConnectOpenAuth
                 // Add the domain names to the listbox
                 foreach (int runningDomainID in runningDomainIDs)
                 {
-                    IntPtr domainPtr = libVirt.virDomainLookupByID(conn, runningDomainID);
+                    IntPtr domainPtr = virDomain.LookupByID(conn, runningDomainID);
                     if (domainPtr == IntPtr.Zero)
                     {
                         MessageBox.Show("Unable to lookup domains by id", "Lookup domain failed", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
                         return;
                     }
-                    string domainName = libVirt.virDomainGetName(domainPtr);
+                    string domainName = virDomain.GetName(domainPtr);
                     if (string.IsNullOrEmpty(domainName))
                     {
                         MessageBox.Show("Unable to get domain name", "Get domain name failed", MessageBoxButtons.OK,
@@ -106,7 +106,7 @@ namespace virConnectOpenAuth
                     }
                     lbDomains.Items.Add(domainName);
                 }
-                libVirt.virConnectClose(conn);
+                virConnect.Close(conn);
             }
             else
             {
