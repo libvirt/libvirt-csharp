@@ -49,9 +49,6 @@
     <Compile Include="..\..\Domain.cs">
       <Link>Domain.cs</Link>
     </Compile>
-    <Compile Include="..\..\Error.cs">
-      <Link>Error.cs</Link>
-    </Compile>
     <Compile Include="..\..\Event.cs">
       <Link>Event.cs</Link>
     </Compile>
@@ -81,6 +78,9 @@
     </Compile>
     <Compile Include="..\..\Types.cs">
       <Link>Types.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Errors.cs">
+      <Link>Errors.cs</Link>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

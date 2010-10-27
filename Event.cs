@@ -22,11 +22,11 @@ namespace Libvirt
         ///<param name="updateTimeout">the virEventUpdateTimeoutFunc which will be called (a delegate)</param>
         ///<param name="removeTimeout">the virEventRemoveTimeoutFunc which will be called (a delegate)</param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virEventRegisterImpl")]
-        public static extern void RegisterImpl([MarshalAs(UnmanagedType.FunctionPtr)]virEventAddHandleFunc addHandle,
-                                               [MarshalAs(UnmanagedType.FunctionPtr)]virEventUpdateHandleFunc updateHandle,
-                                               [MarshalAs(UnmanagedType.FunctionPtr)]virEventRemoveHandleFunc removeHandle,
-                                               [MarshalAs(UnmanagedType.FunctionPtr)]virEventAddTimeoutFunc addTimeout,
-                                               [MarshalAs(UnmanagedType.FunctionPtr)]virEventUpdateTimeoutFunc updateTimeout,
-                                               [MarshalAs(UnmanagedType.FunctionPtr)]virEventRemoveTimeoutFunc removeTimeout);
+        public static extern void RegisterImpl([MarshalAs(UnmanagedType.FunctionPtr)] EventAddHandleFunc addHandle,
+                                               [MarshalAs(UnmanagedType.FunctionPtr)] EventUpdateHandleFunc updateHandle,
+                                               [MarshalAs(UnmanagedType.FunctionPtr)] EventRemoveHandleFunc removeHandle,
+                                               [MarshalAs(UnmanagedType.FunctionPtr)] EventAddTimeoutFunc addTimeout,
+                                               [MarshalAs(UnmanagedType.FunctionPtr)] EventUpdateTimeoutFunc updateTimeout,
+                                               [MarshalAs(UnmanagedType.FunctionPtr)] EventRemoveTimeoutFunc removeTimeout);
     }
 }

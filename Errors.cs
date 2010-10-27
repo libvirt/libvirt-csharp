@@ -15,7 +15,7 @@ namespace Libvirt
     ///<summary>
     /// class for libvirt errors binding
     ///</summary>
-    public class Error
+    public class Errors
     {
         /// <summary>
         /// The error object is kept in thread local storage, so separate threads can safely access this concurrently.
@@ -25,7 +25,7 @@ namespace Libvirt
         /// A <see cref="IntPtr"/> pointer to the hypervisor connection.
         /// </param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virConnResetLastError")]
-        public static extern void virConnResetLastError(IntPtr conn);
+        public static extern void ConnResetLastError(IntPtr conn);
 
         /// <summary>
         /// Set a connection error handling function, if @handler is NULL it will reset to default
@@ -41,7 +41,7 @@ namespace Libvirt
         /// A <see cref="virErrorFunc"/>function to get called in case of error or NULL
         /// </param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virConnSetErrorFunc")]
-        public static extern void virConnSetErrorFunc(IntPtr conn, IntPtr userData, [MarshalAs(UnmanagedType.FunctionPtr)]virErrorFunc handler);
+        public static extern void ConnSetErrorFunc(IntPtr conn, IntPtr userData, [MarshalAs(UnmanagedType.FunctionPtr)] ErrorFunc handler);
 
         /// <summary>
         /// Copy the content of the last error caught at the library level.
@@ -55,7 +55,7 @@ namespace Libvirt
         /// 0 if no error was found and the error code otherwise and -1 in case of parameter error.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virCopyLastError")]
-        public static extern int virCopyLastError([Out] virError to);
+        public static extern int CopyLastError([Out] Error to);
 
         /// <summary>
         /// Default routine reporting an error to stderr.
@@ -64,7 +64,7 @@ namespace Libvirt
         /// A <see cref="virError"/> pointer to the error.
         /// </param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDefaultErrorFunc")]
-        public static extern void virDefaultErrorFunc([In] virError err);
+        public static extern void DefaultErrorFunc([In] Error err);
 
         /// <summary>
         /// Resets and frees the given error.
@@ -73,7 +73,7 @@ namespace Libvirt
         /// A <see cref="virError"/> error to free.
         /// </param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virFreeError")]
-        public static extern void virFreeError(virError err); // Does not work, anybody know why?
+        public static extern void FreeError(Error err); // Does not work, anybody know why?
 
         /// <summary>
         /// Provide a pointer to the last error caught at the library level.
@@ -83,7 +83,7 @@ namespace Libvirt
         /// A pointer to the last error or NULL if none occurred.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virGetLastError")]
-        public static extern int virGetLastError();
+        public static extern int GetLastError();
 
         /// <summary>
         /// Reset the error being pointed to.
@@ -92,14 +92,14 @@ namespace Libvirt
         /// A <see cref="virError"/> pointer to the to clean up.
         /// </param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virResetError")]
-        public static extern void virResetError(virError err);
+        public static extern void ResetError(Error err);
 
         /// <summary>
         /// Reset the last error caught at the library level. The error object is kept in thread local storage,
         /// so separate threads can safely access this concurrently, only resetting their own error object.
         /// </summary>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virResetLastError")]
-        public static extern void virResetLastError();
+        public static extern void ResetLastError();
 
         /// <summary>
         /// Save the last error into a new error object.
@@ -109,7 +109,7 @@ namespace Libvirt
         /// It is the caller's responsibility to free the error with virFreeError().
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virSaveLastError")]
-        public static extern virError virSaveLastError();
+        public static extern Error SaveLastError();
 
         /// <summary>
         /// Set a library global error handling function, if @handler is NULL, it will reset to default printing on stderr.
@@ -122,6 +122,6 @@ namespace Libvirt
         /// A <see cref="virErrorFunc"/>function to get called in case of error or NULL.
         /// </param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virSetErrorFunc")]
-        public static extern void virSetErrorFunc(IntPtr userData, [MarshalAs(UnmanagedType.FunctionPtr)]virErrorFunc handler);
+        public static extern void SetErrorFunc(IntPtr userData, [MarshalAs(UnmanagedType.FunctionPtr)] ErrorFunc handler);
     }
 }

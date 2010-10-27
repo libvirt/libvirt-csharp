@@ -28,7 +28,7 @@ namespace Libvirt
         /// 0 on success, or -1 upon failure
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virStoragePoolBuild")]
-        public static extern int Build(IntPtr pool, virStoragePoolBuildFlags flags);
+        public static extern int Build(IntPtr pool, StoragePoolBuildFlags flags);
 
         /// <summary>
         /// Starts an inactive storage pool.
@@ -96,7 +96,7 @@ namespace Libvirt
         /// 0 on success, or -1 if it could not be obliterate.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virStoragePoolDelete")]
-        public static extern int Delete(IntPtr pool, virStoragePoolDeleteFlags flags);
+        public static extern int Delete(IntPtr pool, StoragePoolDeleteFlags flags);
 
         /// <summary>
         /// Destroy an active storage pool. This will deactivate the pool on the host,
@@ -164,7 +164,7 @@ namespace Libvirt
         /// 0 on success, or -1 on failure.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virStoragePoolGetInfo")]
-        public static extern int GetInfo(IntPtr pool, ref virStoragePoolInfo info);
+        public static extern int GetInfo(IntPtr pool, ref StoragePoolInfo info);
 
         /// <summary>
         /// Fetch the locally unique name of the storage pool.
@@ -237,7 +237,7 @@ namespace Libvirt
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virStoragePoolGetXMLDesc")]
         [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
-        public static extern string GetXMLDesc(IntPtr pool, virDomainXMLFlags flags);
+        public static extern string GetXMLDesc(IntPtr pool, DomainXMLFlags flags);
 
         /// <summary>
         /// Determine if the storage pool is currently running.

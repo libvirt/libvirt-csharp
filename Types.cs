@@ -7,9 +7,10 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Libvirt
 {
@@ -20,7 +21,8 @@ namespace Libvirt
     ///</summary>
     ///<param name="userData">user provided data for the error callback</param>
     ///<param name="error">the error being raised.</param>
-    public delegate void virErrorFunc(IntPtr userData, virError error);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate void ErrorFunc(IntPtr userData, Error error);
     /// <summary>
     /// A callback function to be registered, and called when a domain event occurs
     /// </summary>
@@ -30,7 +32,7 @@ namespace Libvirt
     /// <param name="detail">event specific detail information</param>
     /// <param name="opaque">opaque user data</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void virConnectDomainEventCallback(IntPtr conn, IntPtr dom, virDomainEventType evt, int detail, IntPtr opaque);
+    public delegate void ConnectDomainEventCallback(IntPtr conn, IntPtr dom, DomainEventType evt, int detail, IntPtr opaque);
     ///<summary>
     /// Callback for receiving file handle events. The callback will be invoked once for each event which is pending.
     ///</summary>
@@ -39,13 +41,13 @@ namespace Libvirt
     ///<param name="events">bitset of events from virEventHandleType constants</param>
     ///<param name="opaque">user data registered with handle</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void virEventHandleCallback(int watch, int fd, int events, IntPtr opaque);
+    public delegate void EventHandleCallback(int watch, int fd, int events, IntPtr opaque);
     ///<summary>
     /// Free callbacks
     ///</summary>
     ///<param name="opaque">user data registered with handle</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void virFreeCallback(IntPtr opaque);
+    public delegate void FreeCallback(IntPtr opaque);
     ///<summary>
     /// Part of the EventImpl, this callback Adds a file handle callback to listen for specific events. The same file handle can be registered multiple times provided the requested event sets are non-overlapping If the opaque user data requires free'ing when the handle is unregistered, then a 2nd callback can be supplied for this purpose.
     ///</summary>
@@ -56,27 +58,27 @@ namespace Libvirt
     ///<param name="ff">the callback invoked to free opaque data blob</param>
     ///<returns>a handle watch number to be used for updating and unregistering for events</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int virEventAddHandleFunc(int fd, int events, virEventHandleCallback cb, IntPtr opaque, virFreeCallback ff);
+    public delegate int EventAddHandleFunc(int fd, int events, EventHandleCallback cb, IntPtr opaque, FreeCallback ff);
     ///<summary>
     /// Part of the EventImpl, this user-provided callback is notified when events to listen on change
     ///</summary>
     ///<param name="watch">file descriptor watch to modify</param>
     ///<param name="events">new events to listen on</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void virEventUpdateHandleFunc(int watch, int events);
+    public delegate void EventUpdateHandleFunc(int watch, int events);
     ///<summary>
     /// Part of the EventImpl, this user-provided callback is notified when an fd is no longer being listened on. If a virEventHandleFreeFunc was supplied when the handle was registered, it will be invoked some time during, or after this function call, when it is safe to release the user data.
     ///</summary>
     ///<param name="watch">file descriptor watch to stop listening on</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int virEventRemoveHandleFunc(int watch);
+    public delegate int EventRemoveHandleFunc(int watch);
     ///<summary>
     /// callback for receiving timer events
     ///</summary>
     ///<param name="timer">timer id emitting the event</param>
     ///<param name="opaque">user data registered with handle</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void virEventTimeoutCallback(int timer, IntPtr opaque);
+    public delegate void EventTimeoutCallback(int timer, IntPtr opaque);
     ///<summary>
     /// Part of the EventImpl, this user-defined callback handles adding an event timeout. If the opaque user data requires free'ing when the handle is unregistered, then a 2nd callback can be supplied for this purpose.
     ///</summary>
@@ -86,43 +88,65 @@ namespace Libvirt
     ///<param name="ff">the callback invoked to free opaque data blob</param>
     /// <returns>A timer value</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int virEventAddTimeoutFunc(int timeout, virEventTimeoutCallback cb, IntPtr opaque, virFreeCallback ff);
+    public delegate int EventAddTimeoutFunc(int timeout, EventTimeoutCallback cb, IntPtr opaque, FreeCallback ff);
     ///<summary>
     /// Part of the EventImpl, this user-defined callback updates an event timeout.
     ///</summary>
     ///<param name="timer">the timer to modify</param>
     ///<param name="timeout">the new timeout value</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void virEventUpdateTimeoutFunc(int timer, int timeout);
+    public delegate void EventUpdateTimeoutFunc(int timer, int timeout);
     ///<summary>
     /// Part of the EventImpl, this user-defined callback removes a timer If a virEventTimeoutFreeFunc was supplied when the handle was registered, it will be invoked some time during, or after this function call, when it is safe to release the user data.
     ///</summary>
     ///<param name="timer">the timer to remove</param>
     /// <returns>0 on success, -1 on failure</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int virEventRemoveTimeoutFunc(int timer);
+    public delegate int EventRemoveTimeoutFunc(int timer);
     ///<summary>
     /// Authentication callback
     ///</summary>
-    ///<param name="cred">Pointer to a virConnectCredential array</param>
+    ///<param name="creds">virConnectCredential array</param>
     ///<param name="ncred">number of virConnectCredential in cred</param>
     ///<param name="cbdata">user data passed to callback</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int virConnectAuthCallback(IntPtr cred, uint ncred, IntPtr cbdata);
+    public delegate int ConnectAuthCallbackUnmanaged(IntPtr creds, uint ncred, IntPtr cbdata);
+    /// <summary>
+    /// Authentication callback
+    /// </summary>
+    /// <param name="creds">ConnectCredential array</param>
+    /// <param name="cbdata">user data passed to callback</param>
+    /// <returns></returns>
+    public delegate int ConnectAuthCallback(ref ConnectCredential[] creds, IntPtr cbdata);
     #endregion
 
     #region structs
     /// <summary>
+    /// This is a struct used to simply the C# bindings, for C# bindings internal use only.
+    /// </summary>
+    public struct OpenAuthManagedCB
+    {
+        /// <summary>
+        /// Pointer to user data of the ConnectOpenAuth
+        /// </summary>
+        public IntPtr cbdata;
+        /// <summary>
+        /// The C# delegate which must be called
+        /// </summary>
+        public ConnectAuthCallback cbManaged;
+    }
+
+    /// <summary>
     /// the virError object
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public class virError
+    public struct Error
     {
         /// <summary>
         /// The error code, a virErrorNumber.
         /// </summary>
         [MarshalAs(UnmanagedType.I4)]
-        public virErrorNumber code;
+        public ErrorNumber code;
         /// <summary>
         /// What part of the library raised this error.
         /// </summary>
@@ -145,7 +169,7 @@ namespace Libvirt
         /// How consequent is the error.
         /// </summary>
         [MarshalAs(UnmanagedType.I4)]
-        public virErrorLevel level;
+        public ErrorLevel level;
         /// <summary>
         /// Connection if available, deprecated see note above.
         /// </summary>
@@ -204,7 +228,7 @@ namespace Libvirt
     /// Blocks domain statistics
     ///</summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct virDomainBlockStatsStruct
+    public struct DomainBlockStatsStruct
     {
         /// <summary>
         /// Number of read requests.
@@ -232,7 +256,7 @@ namespace Libvirt
     /// Domain interface statistics
     ///</summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct virDomainInterfaceStatsStruct
+    public struct DomainInterfaceStatsStruct
     {
         ///<summary>
         /// Bytes received
@@ -272,7 +296,7 @@ namespace Libvirt
     /// Structure to handle connection authentication
     ///</summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct virConnectAuth
+    public struct ConnectAuthUnmanaged
     {
         /// <summary>
         /// List of supported virConnectCredentialType values, should be a IntPtr to an int array or to a virConnectCredentialType array
@@ -287,39 +311,78 @@ namespace Libvirt
         /// Callback used to collect credentials, a virConnectAuthCallback delegate in bindings
         ///</summary>
         [MarshalAs(UnmanagedType.FunctionPtr)]
-        public virConnectAuthCallback cb;
+        public ConnectAuthCallbackUnmanaged cb;
         ///<summary>
         /// Data transported with callback, should be a IntPtr on what you want
         ///</summary>
-        private IntPtr cbdataPtr;
-        ///<summary>
-        /// Data transported with callback, should be a IntPtr on what you want
-        ///</summary>
-        public Object cbdata
-        {
-            get
-            {
-                return Marshal.PtrToStructure(cbdataPtr, typeof(Object));
-            }
-            set
-            {
-                cbdataPtr = Marshal.AllocHGlobal(Marshal.SizeOf(value));
-                Marshal.StructureToPtr(value, cbdataPtr, false);
-            }
-        }
+        public IntPtr cbdata;
         /// <summary>
         /// List of supported virConnectCredentialType values
         /// </summary>
-        public virConnectCredentialType[] CredTypes
+        public ConnectCredentialType[] CredTypes
         {
             get
             {
                 int[] intCredTypes = new int[ncredtype];
                 Marshal.Copy(credtypes, intCredTypes, 0, (int)ncredtype);
-				virConnectCredentialType[] result = new virConnectCredentialType[ncredtype];
+                ConnectCredentialType[] result = new ConnectCredentialType[ncredtype];
+                for (int i = 0; i < intCredTypes.Length; i++)
+                {
+                    result[i] = (ConnectCredentialType)intCredTypes[i];
+                }
+                return result;
+            }
+            set
+            {
+                ncredtype = (uint)value.Length;
+                credtypes = Marshal.AllocHGlobal(value.Length * sizeof(int));
+                int[] vals = new int[value.Length];
+                for (int i = 0; i < value.Length; i++)
+                {
+                    vals[i] = (int)value[i];
+                }
+                Marshal.Copy(vals, 0, credtypes, (int)ncredtype);
+            }
+        }
+    }
+
+    ///<summary>
+    /// Structure to handle connection authentication
+    ///</summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ConnectAuth
+    {
+        /// <summary>
+        /// List of supported virConnectCredentialType values, should be a IntPtr to an int array or to a virConnectCredentialType array
+        /// </summary>
+        private IntPtr credtypes;
+        ///<summary>
+        /// Number of virConnectCredentialType in credtypes
+        ///</summary>
+        [MarshalAs(UnmanagedType.U4)]
+        private uint ncredtype;
+        ///<summary>
+        /// Callback used to collect credentials, a virConnectAuthCallback delegate in bindings
+        ///</summary>
+        [MarshalAs(UnmanagedType.FunctionPtr)]
+        public ConnectAuthCallback cb;
+        ///<summary>
+        /// Data transported with callback, should be a IntPtr on what you want
+        ///</summary>
+        public IntPtr cbdata;
+        /// <summary>
+        /// List of supported virConnectCredentialType values
+        /// </summary>
+        public ConnectCredentialType[] CredTypes
+        {
+            get
+            {
+                int[] intCredTypes = new int[ncredtype];
+                Marshal.Copy(credtypes, intCredTypes, 0, (int)ncredtype);
+                ConnectCredentialType[] result = new ConnectCredentialType[ncredtype];
 				for (int i=0; i< intCredTypes.Length; i++)
 				{
-					result[i] = (virConnectCredentialType)i;
+                    result[i] = (ConnectCredentialType)intCredTypes[i];
 				}
                 return result;
             }
@@ -341,38 +404,34 @@ namespace Libvirt
     /// Credential structure
     ///</summary>
     [StructLayout(LayoutKind.Sequential)]
-    public class virConnectCredential
+    public class ConnectCredential
     {
         ///<summary>
         /// One of virConnectCredentialType constants
         ///</summary>
         [MarshalAs(UnmanagedType.I4)]
-        public virConnectCredentialType type;
+        public ConnectCredentialType type;
         ///<summary>
         /// Prompt to show to user
         ///</summary>
-        //[MarshalAs(UnmanagedType.LPStr)]
         private IntPtr prompt;
         ///<summary>
         /// Additional challenge to show
         ///</summary>
-        //[MarshalAs(UnmanagedType.LPStr)]
         private IntPtr challenge;
         ///<summary>
         /// Optional default result
         ///</summary>
-        //[MarshalAs(UnmanagedType.LPStr)]
         private IntPtr defresult;
         ///<summary>
         /// Result to be filled with user response (or defresult). An IntPtr to a marshalled allocated string
         ///</summary>
-        //[MarshalAs(UnmanagedType.LPStr)]
         private IntPtr result;
         ///<summary>
         /// Length of the result
         ///</summary>
         [MarshalAs(UnmanagedType.U4)]
-        public uint resultlen;
+        private uint resultlen;
         ///<summary>
         /// Prompt to show to user
         ///</summary>
@@ -415,6 +474,7 @@ namespace Libvirt
             set
             {
                 result = NativeFunctions.StrDup(Marshal.StringToHGlobalAnsi(value));
+                resultlen = (uint)value.Length;
             }
         }
     }
@@ -423,13 +483,13 @@ namespace Libvirt
     /// Structure for domain memory statistics
     ///</summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct virDomainMemoryStat
+    public struct DomainMemoryStat
     {
         /// <summary>
         /// Tag
         /// </summary>
         [MarshalAs(UnmanagedType.I4)]
-        public virDomainMemoryStatTags tag;
+        public DomainMemoryStatTags tag;
         /// <summary>
         /// Value
         /// </summary>
@@ -441,13 +501,13 @@ namespace Libvirt
     /// Structure to handle volume informations
     ///</summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct virStorageVolInfo
+    public struct StorageVolInfo
     {
         /// <summary>
         /// virStorageVolType flags.
         /// </summary>
         [MarshalAs(UnmanagedType.I4)]
-        public virStorageVolType type;
+        public StorageVolType type;
         /// <summary>
         /// Logical size bytes.
         /// </summary>
@@ -464,13 +524,13 @@ namespace Libvirt
     /// Structure to handle storage pool informations
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct virStoragePoolInfo
+    public struct StoragePoolInfo
     {
         /// <summary>
         /// virStoragePoolState flags
         /// </summary>
         [MarshalAs(UnmanagedType.I4)]
-        public virStoragePoolState state;
+        public StoragePoolState state;
         /// <summary>
         /// Logical size bytes
         /// </summary>
@@ -491,7 +551,7 @@ namespace Libvirt
     /// <summary>
     /// Structure to handle node informations
     /// </summary>
-    public struct virNodeInfo
+    public struct NodeInfo
     {
         /// <summary>
         /// String indicating the CPU model.
@@ -531,12 +591,12 @@ namespace Libvirt
     /// Structure tu handle domain informations
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct virDomainInfo
+    public struct DomainInfo
     {
         /// <summary>
         /// The running state, one of virDomainState.
         /// </summary>
-        public virDomainState state;
+        public DomainState state;
         /// <summary>
         /// The maximum memory in KBytes allowed.
         /// </summary>
@@ -560,7 +620,7 @@ namespace Libvirt
     ///<summary>
     /// Enumerate errors
     ///</summary>
-    public enum virErrorNumber
+    public enum ErrorNumber
     {
         /// <summary>
         /// No error
@@ -831,7 +891,7 @@ namespace Libvirt
     /// <summary>
     /// Enumrate types of domain errors
     /// </summary>
-    public enum virErrorDomain
+    public enum ErrorDomain
     {
         /// <summary>
         /// None
@@ -982,7 +1042,7 @@ namespace Libvirt
     /// <summary>
     /// Enumerate the error levels
     /// </summary>
-    public enum virErrorLevel
+    public enum ErrorLevel
     {
         /// <summary>
         /// No error
@@ -1001,7 +1061,7 @@ namespace Libvirt
     /// Type of handles for callback
     ///</summary>
     [Flags]
-    public enum virEventHandleType
+    public enum EventHandleType
     {
         /// <summary>
         /// None
@@ -1029,7 +1089,7 @@ namespace Libvirt
     /// Memory statistics tags
     ///</summary>
     [Flags]
-    public enum virDomainMemoryStatTags
+    public enum DomainMemoryStatTags
     {
         /// <summary>
         ///  The total amount of memory written out to swap space (in kB).
@@ -1062,7 +1122,7 @@ namespace Libvirt
     ///<summary>
     /// Types of storage volume
     ///</summary>
-    public enum virStorageVolType
+    public enum StorageVolType
     {
         /// <summary>
         /// Regular file based volumes.
@@ -1077,7 +1137,7 @@ namespace Libvirt
     /// <summary>
     /// States of storage pool
     /// </summary>
-    public enum virStoragePoolState
+    public enum StoragePoolState
     {
         /// <summary>
         /// Not running.
@@ -1100,7 +1160,7 @@ namespace Libvirt
     /// Flasg for XML domain rendering
     /// </summary>
     [Flags]
-    public enum virDomainXMLFlags
+    public enum DomainXMLFlags
     {
         /// <summary>
         /// Dump security sensitive information too.
@@ -1115,7 +1175,7 @@ namespace Libvirt
     /// <summary>
     /// Details on the caused of the 'defined' lifecycle event
     /// </summary>
-    public enum virDomainEventDefinedDetailType
+    public enum DomainEventDefinedDetailType
     {
         /// <summary>
         /// Newly created config file
@@ -1130,7 +1190,7 @@ namespace Libvirt
     /// <summary>
     /// Details on the caused of the 'undefined' lifecycle event
     /// </summary>
-    public enum virDomainEventUndefinedDetailType
+    public enum DomainEventUndefinedDetailType
     {
         /// <summary>
         /// Deleted the config file
@@ -1140,7 +1200,7 @@ namespace Libvirt
     /// <summary>
     /// Details on the caused of the 'started' lifecycle event
     /// </summary>
-    public enum virDomainEventStartedDetailType
+    public enum DomainEventStartedDetailType
     {
         /// <summary>
         /// Normal startup from boot
@@ -1158,7 +1218,7 @@ namespace Libvirt
     /// <summary>
     /// Details on the caused of the 'suspended' lifecycle event
     /// </summary>
-    public enum virDomainEventSuspendedDetailType
+    public enum DomainEventSuspendedDetailType
     {
         /// <summary>
         /// Normal suspend due to admin pause
@@ -1172,7 +1232,7 @@ namespace Libvirt
     /// <summary>
     /// Details on the caused of the 'resumed' lifecycle event
     /// </summary>
-    public enum virDomainEventResumedDetailType
+    public enum DomainEventResumedDetailType
     {
         /// <summary>
         /// Normal resume due to admin unpause
@@ -1186,7 +1246,7 @@ namespace Libvirt
     /// <summary>
     /// Details on the caused of the 'stopped' lifecycle event
     /// </summary>
-    public enum virDomainEventStoppedDetailType
+    public enum DomainEventStoppedDetailType
     {
         /// <summary>
         /// Normal shutdown
@@ -1217,7 +1277,7 @@ namespace Libvirt
     /// <summary>
     /// Types of domain events
     /// </summary>
-    public enum virDomainEventType
+    public enum DomainEventType
     {
         /// <summary>
         /// Domain defined
@@ -1248,7 +1308,7 @@ namespace Libvirt
     /// <summary>
     /// Flags for storage pool building
     /// </summary>
-    public enum virStoragePoolBuildFlags
+    public enum StoragePoolBuildFlags
     {
         /// <summary>
         /// Regular build from scratch.
@@ -1267,7 +1327,7 @@ namespace Libvirt
     ///<summary>
     /// Flags for storage pool deletion
     ///</summary>
-    public enum virStoragePoolDeleteFlags
+    public enum StoragePoolDeleteFlags
     {
         /// <summary>
         /// Delete metadata only (fast).
@@ -1281,7 +1341,7 @@ namespace Libvirt
     ///<summary>
     /// Types of credentials
     ///</summary>
-    public enum virConnectCredentialType
+    public enum ConnectCredentialType
     {
         ///<summary>
         /// Identity to act as
@@ -1324,7 +1384,7 @@ namespace Libvirt
     /// <summary>
     /// States of a domain
     /// </summary>
-    public enum virDomainState
+    public enum DomainState
     {
         /// <summary>
         /// No state.

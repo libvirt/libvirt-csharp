@@ -82,7 +82,7 @@ namespace Libvirt
         /// 0 in case of success and -1 in case of failure.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virNodeGetInfo")]
-        public static extern int GetInfo(IntPtr h, [Out] virNodeInfo info);
+        public static extern int GetInfo(IntPtr h, [Out] NodeInfo info);
 
         // TODO virNodeGetSecurityModel
 

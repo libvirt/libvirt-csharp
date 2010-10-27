@@ -33,6 +33,6 @@ Global
 		{FFCD939E-7F9A-44D5-AEBC-84F40942E8B5} = {504BA6A7-9D0E-44BA-827D-D797773347FD}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = ..\..\examples\MonoDevelop\virConnectOpen\virConnectOpen.csproj
+		StartupItem = ..\..\examples\MonoDevelop\virConnectOpenAuth\virConnectOpenAuth.csproj
 	EndGlobalSection
 EndGlobal

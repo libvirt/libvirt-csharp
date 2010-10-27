@@ -380,8 +380,66 @@ namespace Libvirt
         ///<param name="flags">Open flags</param>
         ///<returns>a pointer to the hypervisor connection or NULL in case of error URIs are documented at http://libvirt.org/uri.html </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virConnectOpenAuth")]
-        public static extern IntPtr OpenAuth(string name, ref virConnectAuth auth, int flags);
+        private static extern IntPtr OpenAuth(string name, ref ConnectAuthUnmanaged auth, int flags);
+        /// <summary>
+        /// This function should be called first to get a connection to the Hypervisor. If necessary, authentication will be performed fetching credentials via the callback See virConnectOpen for notes about environment variables which can have an effect on opening drivers
+        /// </summary>
+        /// <param name="name">URI of the hypervisor</param>
+        /// <param name="auth">Authenticate callback parameters</param>
+        /// <param name="flags">Open flags</param>
+        /// <returns>a pointer to the hypervisor connection or NULL in case of error URIs are documented at http://libvirt.org/uri.html </returns>
+        public static IntPtr OpenAuth(string name, ref ConnectAuth auth, int flags)
+        {
+            // Create a structure that hold cbdata and the callback target
+            OpenAuthManagedCB cbAndUserData = new OpenAuthManagedCB();
+            cbAndUserData.cbdata = auth.cbdata;
+            cbAndUserData.cbManaged = auth.cb;
+            // Pass the structure as cbdata
+            IntPtr cbAndUserDataPtr = Marshal.AllocHGlobal(Marshal.SizeOf(cbAndUserData));
+            Marshal.StructureToPtr(cbAndUserData, cbAndUserDataPtr, true);
 
+            // Create the real ConnectAuth structure, it will call OpenAuthCallbackFromUnmanaged via callback
+            ConnectAuthUnmanaged connectAuth = new ConnectAuthUnmanaged();
+            connectAuth.cbdata = cbAndUserDataPtr;
+            connectAuth.cb = OpenAuthCallbackFromUnmanaged;
+            connectAuth.CredTypes = auth.CredTypes;
+
+            return OpenAuth(name, ref connectAuth, flags);
+        }
+
+        private static int OpenAuthCallbackFromUnmanaged(IntPtr creds, uint ncreds, IntPtr cbdata)
+        {
+            // Give back the structure that hold cbdata and the callback target
+            OpenAuthManagedCB cbAndUserData = (OpenAuthManagedCB)Marshal.PtrToStructure(cbdata, typeof(OpenAuthManagedCB));
+            int offset = 0;
+            int credIndex = 0;
+
+            ConnectCredential[] cc = new ConnectCredential[ncreds];
+            // Loop thru credentials and initialize the ConnectCredential array
+            while (credIndex < ncreds)
+            {
+                IntPtr currentCred = MarshalHelper.IntPtrOffset(creds, offset);
+                ConnectCredential cred = (ConnectCredential)Marshal.PtrToStructure(currentCred, typeof(ConnectCredential));
+                offset += Marshal.SizeOf(cred);
+                cc[credIndex] = cred;
+                credIndex++;
+            }
+            // Call the delegate with the ConnectCredential array, this allow the user to answer the result
+            cbAndUserData.cbManaged(ref cc, cbAndUserData.cbdata);
+
+            offset = 0;
+            credIndex = 0;
+            // Loop thru ConnectCredential array and copy back to unmanaged memory
+            while (credIndex < ncreds)
+            {
+                IntPtr currentCred = MarshalHelper.IntPtrOffset(creds, offset);
+                Marshal.StructureToPtr(cc[credIndex], currentCred, true);
+                offset += Marshal.SizeOf(cc[credIndex]);
+                credIndex++;
+            }
+
+            return 0;
+        }
         /// <summary>
         /// This function should be called first to get a restricted connection to the library functionalities. The set of APIs usable are then restricted on the available methods to control the domains. See virConnectOpen for notes about environment variables which can have an effect on opening drivers
         /// </summary>
@@ -405,7 +463,7 @@ namespace Libvirt
         /// <param name="ff">optional function to deallocate opaque when not used anymore</param>
         /// <returns>t shall take a reference to it, by calling virDomainRef. The reference can be released once the object is no longer required by calling virDomainFree. Returns 0 on success, -1 on failure</returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virConnectDomainEventRegister")]
-        public static extern int DomainEventRegister(IntPtr conn, [MarshalAs(UnmanagedType.FunctionPtr)] virConnectDomainEventCallback cb,
-                                                                IntPtr opaque, [MarshalAs(UnmanagedType.FunctionPtr)] virFreeCallback ff);
+        public static extern int DomainEventRegister(IntPtr conn, [MarshalAs(UnmanagedType.FunctionPtr)] ConnectDomainEventCallback cb,
+                                                                IntPtr opaque, [MarshalAs(UnmanagedType.FunctionPtr)] FreeCallback ff);
     }
 }

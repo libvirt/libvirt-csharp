@@ -7,18 +7,19 @@
  * 
  * Sample code for :
  * Function :
- *      virConnectOpenAuth
- *      virConnectNumOfDefinedDomains
- *      virConnectListDefinedDomains
- *      virConnectNumOfDomains
- *      virDomainLookupByID
- *      virConnectListDomains
- *      virDomainGetName
- *      virConnectClose
+ *      Connect.OpenAuth
+ *      Connect.NumOfDefinedDomains
+ *      Connect.ListDefinedDomains
+ *      Connect.NumOfDomains
+ *      Connect.Close
+ *      Connect.ListDomains
+ *      Domain.LookupByID
+ *      Domain.GetName
+ *
  * Types :
- *      virConnectAuth
- *      virConnectCredential
- *      virConnectCredentialType
+ *      ConnectAuth
+ *      ConnectCredential
+ *      ConnectCredentialType
  */
 
 using System;
@@ -45,16 +46,17 @@ namespace virConnectOpenAuth
         {
             // Fill a structure to pass username and password to callbacks
             AuthData authData = new AuthData { password = tbPassword.Text, user_name = tbUsername.Text };
-
+            IntPtr authDataPtr = Marshal.AllocHGlobal(Marshal.SizeOf(authData));
+            Marshal.StructureToPtr(authData, authDataPtr, true);
             // Fill a virConnectAuth structure
-            virConnectAuth auth = new virConnectAuth
+            ConnectAuth auth = new ConnectAuth
             {
-                cbdata = authData,                  // The authData structure
+                cbdata = authDataPtr,               // The authData structure
                 cb = AuthCallback,                  // the method called by callbacks
                 CredTypes = new[]
                                 {
-                                    virConnectCredentialType.VIR_CRED_AUTHNAME,
-                                    virConnectCredentialType.VIR_CRED_PASSPHRASE
+                                    ConnectCredentialType.VIR_CRED_AUTHNAME,
+                                    ConnectCredentialType.VIR_CRED_PASSPHRASE
                                 }          // The list of credentials types
             };
 
@@ -114,38 +116,25 @@ namespace virConnectOpenAuth
             }
         }
 
-        private static int AuthCallback(IntPtr creds, uint ncred, IntPtr cbdata)
+        private static int AuthCallback(ref ConnectCredential[] creds, IntPtr cbdata)
         {
-            // Get the AuthData structure
             AuthData authData = (AuthData)Marshal.PtrToStructure(cbdata, typeof(AuthData));
-            int offset = 0;
-            int credIndex = 0;
-
-            while (credIndex < ncred)
+            for (int i = 0; i < creds.Length; i++)
             {
-                IntPtr currentCred = new IntPtr(creds.ToInt32() + offset);
-
-                virConnectCredential cred = (virConnectCredential) Marshal.PtrToStructure(currentCred, typeof(virConnectCredential));
-                offset += Marshal.SizeOf(cred);
+                ConnectCredential cred = creds[i];
                 switch (cred.type)
                 {
-                    case virConnectCredentialType.VIR_CRED_AUTHNAME:
+                    case ConnectCredentialType.VIR_CRED_AUTHNAME:
                         // Fill the user name
                         cred.Result = authData.user_name;
-                        cred.resultlen = (uint)authData.user_name.Length;
                         break;
-                    case virConnectCredentialType.VIR_CRED_PASSPHRASE:
+                    case ConnectCredentialType.VIR_CRED_PASSPHRASE:
                         // Fill the password
                         cred.Result = authData.password;
-                        cred.resultlen = (uint)authData.password.Length;
                         break;
                     default:
                         return -1;
                 }
-                // Write structure to the unmanaged address
-                Marshal.StructureToPtr(cred, currentCred, true);
-
-                credIndex++;
             }
             return 0;
         }

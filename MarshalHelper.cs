@@ -7,10 +7,7 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Libvirt
 {
@@ -31,6 +28,19 @@ namespace Libvirt
         {
             IntPtr s = Marshal.ReadIntPtr(stringPtr, IntPtr.Size);
             return Marshal.PtrToStringAnsi(s);
+        }
+
+        public static IntPtr IntPtrOffset(IntPtr src, int offset)
+        {
+            switch (IntPtr.Size)
+            {
+                case 4:
+                    return new IntPtr(src.ToInt32() + offset);
+                case 8:
+                    return new IntPtr(src.ToInt64() + offset);
+                default:
+                    throw new NotSupportedException("Surprise!  This is running on a machine where pointers are " + IntPtr.Size + " bytes and arithmetic doesn't work in C# on them.");
+            }
         }
     }
 }

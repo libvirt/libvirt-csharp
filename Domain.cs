@@ -42,7 +42,7 @@ namespace Libvirt
         /// <param name="size">size of stats structure</param>
         /// <returns>0 in case of success or -1 in case of failure.</returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainBlockStats")]
-        public static extern int BlockStats(IntPtr dom, string path, virDomainBlockStatsStruct stats, int size);
+        public static extern int BlockStats(IntPtr dom, string path, DomainBlockStatsStruct stats, int size);
         /// <summary>
         /// This method will dump the core of a domain on a given file for analysis. Note that for remote Xen Daemon the file path will be interpreted in the remote host.
         /// </summary>
@@ -197,7 +197,7 @@ namespace Libvirt
         /// 0 in case of success and -1 in case of failure.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainGetInfo")]
-        public static extern int GetInfo(IntPtr domain, [Out] virDomainInfo info);
+        public static extern int GetInfo(IntPtr domain, [Out] DomainInfo info);
         /// <summary>
         /// Retrieve the maximum amount of physical memory allocated to a domain.
         /// If domain is NULL, then this get the amount of memory reserved to Domain0 i.e. the domain where the application runs.
@@ -323,7 +323,7 @@ namespace Libvirt
         /// 0 in case of success or -1 in case of failure.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainInterfaceStats")]
-        public static extern int InterfaceStats(IntPtr dom, string path, virDomainInterfaceStatsStruct stats, int size);
+        public static extern int InterfaceStats(IntPtr dom, string path, DomainInterfaceStatsStruct stats, int size);
         /// <summary>
         /// Determine if the domain is currently running.
         /// </summary>

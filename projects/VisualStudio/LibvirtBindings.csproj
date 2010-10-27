@@ -47,8 +47,8 @@
     <Compile Include="..\..\Domain.cs">
       <Link>Domain.cs</Link>
     </Compile>
-    <Compile Include="..\..\Error.cs">
-      <Link>Error.cs</Link>
+    <Compile Include="..\..\Errors.cs">
+      <Link>Errors.cs</Link>
     </Compile>
     <Compile Include="..\..\Event.cs">
       <Link>Event.cs</Link>

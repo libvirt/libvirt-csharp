@@ -109,7 +109,7 @@ namespace Libvirt
         /// 0 on success, or -1 on failure.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virStorageVolGetInfo")]
-        public static extern int GetInfo(IntPtr vol, ref virStorageVolInfo info);
+        public static extern int GetInfo(IntPtr vol, ref StorageVolInfo info);
 
         /// <summary>
         /// Fetch the storage volume key.
