@@ -32,7 +32,7 @@ namespace Libvirt
     /// <param name="detail">event specific detail information</param>
     /// <param name="opaque">opaque user data</param>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate void ConnectDomainEventCallback(IntPtr conn, IntPtr dom, DomainEventType evt, int detail, IntPtr opaque);
+    public delegate void ConnectDomainEventCallback(IntPtr conn, IntPtr dom, [MarshalAs(UnmanagedType.I4)] DomainEventType evt, int detail, IntPtr opaque);
     ///<summary>
     /// Callback for receiving file handle events. The callback will be invoked once for each event which is pending.
     ///</summary>
@@ -58,7 +58,7 @@ namespace Libvirt
     ///<param name="ff">the callback invoked to free opaque data blob</param>
     ///<returns>a handle watch number to be used for updating and unregistering for events</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int EventAddHandleFunc(int fd, int events, EventHandleCallback cb, IntPtr opaque, FreeCallback ff);
+    public delegate int EventAddHandleFunc(int fd, int events, [MarshalAs(UnmanagedType.FunctionPtr)] EventHandleCallback cb, IntPtr opaque, [MarshalAs(UnmanagedType.FunctionPtr)] FreeCallback ff);
     ///<summary>
     /// Part of the EventImpl, this user-provided callback is notified when events to listen on change
     ///</summary>
@@ -88,7 +88,7 @@ namespace Libvirt
     ///<param name="ff">the callback invoked to free opaque data blob</param>
     /// <returns>A timer value</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int EventAddTimeoutFunc(int timeout, EventTimeoutCallback cb, IntPtr opaque, FreeCallback ff);
+    public delegate int EventAddTimeoutFunc(int timeout, [MarshalAs(UnmanagedType.FunctionPtr)] EventTimeoutCallback cb, IntPtr opaque, [MarshalAs(UnmanagedType.FunctionPtr)] FreeCallback ff);
     ///<summary>
     /// Part of the EventImpl, this user-defined callback updates an event timeout.
     ///</summary>
