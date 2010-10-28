@@ -47,8 +47,12 @@ public partial class MainWindow : Gtk.Window
 		Application.Quit ();
 		a.RetVal = true;
 	}
+
 	protected virtual void OnButton1Clicked (object sender, System.EventArgs e)
 	{
+        // Remove all items
+        domainListStore.Clear ();
+
 		// Fill a structure to pass username and password to callbacks
         AuthData authData = new AuthData { password = entry3.Text, user_name = entry2.Text };
         IntPtr authDataPtr = Marshal.AllocHGlobal(Marshal.SizeOf(authData));
@@ -68,7 +72,8 @@ public partial class MainWindow : Gtk.Window
 		
 		// Request the connection
         IntPtr conn = Connect.OpenAuth(entry1.Text, ref auth, 0);
-		
+        Marshal.FreeHGlobal(authDataPtr);
+
 		if (conn != IntPtr.Zero)
         {
             // Get the number of defined (not running) domains
@@ -77,7 +82,7 @@ public partial class MainWindow : Gtk.Window
             if (Connect.ListDefinedDomains(conn, ref definedDomainNames, numOfDefinedDomains) == -1)
             {
 				ShowError("Unable to list defined domains");
-                return;
+                goto cleanup;
             }
 			
             // Add the domain names to the listbox
@@ -92,7 +97,7 @@ public partial class MainWindow : Gtk.Window
             if (Connect.ListDomains(conn, runningDomainIDs, numOfRunningDomain) == -1)
             {
                 ShowError("Unable to list running domains");
-                return;
+                goto cleanup;
             }
 			
             // Add the domain names to the listbox
@@ -102,16 +107,19 @@ public partial class MainWindow : Gtk.Window
                 if (domainPtr == IntPtr.Zero)
                 {
                     ShowError("Unable to lookup domains by id");
-                    return;
+                    goto cleanup;
                 }
                 string domainName = Domain.GetName(domainPtr);
+                Domain.Free(domainPtr);
                 if (string.IsNullOrEmpty(domainName))
                 {
                     ShowError("Unable to get domain name");
-                    return;
+                    goto cleanup;
                 }
                 AddDomainInTreeView(domainName);
             }
+
+        cleanup:
             Connect.Close(conn);
         }
         else
@@ -157,7 +165,5 @@ public partial class MainWindow : Gtk.Window
         }
         return 0;
     }
-	
-	
 }
 

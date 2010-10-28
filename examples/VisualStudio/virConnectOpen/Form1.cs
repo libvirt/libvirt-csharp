@@ -27,18 +27,28 @@ namespace virConnectOpen
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
+            lbStoragePool.Items.Clear();
+
             IntPtr conn = Connect.Open(tbURI.Text);
             if (conn != IntPtr.Zero)
             {
                 int numOfStoragePools = Connect.NumOfStoragePools(conn);
                 if (numOfStoragePools == -1)
+                {
                     ShowError("Unable to get the number of storage pools");
+                    goto cleanup;
+                }
                 string[] storagePoolsNames = new string[numOfStoragePools];
                 int listStoragePools = Connect.ListStoragePools(conn, ref storagePoolsNames, numOfStoragePools);
                 if (listStoragePools == -1)
+                {
                     ShowError("Unable to list storage pools");
+                    goto cleanup;
+                }
                 foreach (string storagePoolName in storagePoolsNames)
                     lbStoragePool.Items.Add(storagePoolName);
+            cleanup:
+                Connect.Close(conn);
             }
             else
             {

@@ -44,6 +44,8 @@ namespace virConnectOpenAuth
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
+            lbDomains.Items.Clear();
+
             // Fill a structure to pass username and password to callbacks
             AuthData authData = new AuthData { password = tbPassword.Text, user_name = tbUsername.Text };
             IntPtr authDataPtr = Marshal.AllocHGlobal(Marshal.SizeOf(authData));
@@ -62,6 +64,7 @@ namespace virConnectOpenAuth
 
             // Request the connection
             IntPtr conn = Connect.OpenAuth(tbURI.Text, ref auth, 0);
+            Marshal.FreeHGlobal(authDataPtr);
 
             if (conn != IntPtr.Zero)
             {
@@ -70,9 +73,9 @@ namespace virConnectOpenAuth
                 string[] definedDomainNames = new string[numOfDefinedDomains];
                 if (Connect.ListDefinedDomains(conn, ref definedDomainNames, numOfDefinedDomains) == -1)
                 {
-                   MessageBox.Show("Unable to list defined domains", "List defined domains failed", MessageBoxButtons.OK,
+                    MessageBox.Show("Unable to list defined domains", "List defined domains failed", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
-                    return;
+                    goto cleanup;
                 }
 
                 // Add the domain names to the listbox
@@ -86,7 +89,7 @@ namespace virConnectOpenAuth
                 {
                     MessageBox.Show("Unable to list running domains", "List running domains failed", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
-                    return;
+                    goto cleanup;
                 }
 
                 // Add the domain names to the listbox
@@ -97,17 +100,20 @@ namespace virConnectOpenAuth
                     {
                         MessageBox.Show("Unable to lookup domains by id", "Lookup domain failed", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
-                        return;
+                        goto cleanup;
                     }
                     string domainName = Domain.GetName(domainPtr);
+                    Domain.Free(domainPtr);
                     if (string.IsNullOrEmpty(domainName))
                     {
                         MessageBox.Show("Unable to get domain name", "Get domain name failed", MessageBoxButtons.OK,
                                     MessageBoxIcon.Error);
-                        return;
+                        goto cleanup;
                     }
                     lbDomains.Items.Add(domainName);
                 }
+
+            cleanup:
                 Connect.Close(conn);
             }
             else
