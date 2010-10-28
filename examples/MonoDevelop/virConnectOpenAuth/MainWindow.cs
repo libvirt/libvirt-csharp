@@ -36,6 +36,10 @@ public partial class MainWindow : Gtk.Window
 		treeview1.AppendColumn(tvcDomains);
 		
 		treeview1.Model = domainListStore;
+
+		CellRendererText crtDomainCell = new CellRendererText();
+		tvcDomains.PackStart(crtDomainCell, true);
+		tvcDomains.AddAttribute(crtDomainCell, "text", 0);
 	}
 
 	protected void OnDeleteEvent (object sender, DeleteEventArgs a)
@@ -129,9 +133,6 @@ public partial class MainWindow : Gtk.Window
 	private void AddDomainInTreeView(string domainName)
 	{
 		domainListStore.AppendValues(domainName);
-		CellRendererText crtDomainCell = new CellRendererText();
-		tvcDomains.PackStart(crtDomainCell, true);
-		tvcDomains.AddAttribute(crtDomainCell, "text", 0);
 	}
 	
     private static int AuthCallback(ref ConnectCredential[] creds, IntPtr cbdata)
