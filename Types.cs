@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C)
  *   Arnaud Champion <arnaud.champion@devatom.fr>
  *   Jaromír Červenka <cervajz@cervajz.com>
@@ -406,6 +406,10 @@ namespace Libvirt
     [StructLayout(LayoutKind.Sequential)]
     public class ConnectCredential
     {
+        public ConnectCredential ()
+        {
+            result = IntPtr.Zero;
+        }
         ///<summary>
         /// One of virConnectCredentialType constants
         ///</summary>
@@ -473,8 +477,13 @@ namespace Libvirt
             }
             set
             {
-                result = NativeFunctions.StrDup(Marshal.StringToHGlobalAnsi(value));
+                IntPtr tmp = Marshal.StringToHGlobalAnsi(value);
+
+                NativeFunctions.Free(result);
+                result = NativeFunctions.StrDup(tmp);
                 resultlen = (uint)value.Length;
+
+                Marshal.FreeHGlobal(tmp);
             }
         }
     }
