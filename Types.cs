@@ -597,23 +597,25 @@ namespace Libvirt
         public uint threads;
     }
     /// <summary>
-    /// Structure tu handle domain informations
+    /// Structure to handle domain informations
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct DomainInfo
+    public class DomainInfo
     {
         /// <summary>
         /// The running state, one of virDomainState.
         /// </summary>
-        public DomainState state;
+        private byte state;
         /// <summary>
         /// The maximum memory in KBytes allowed.
         /// </summary>
-        public ulong maxMem;
+        [MarshalAs(UnmanagedType.SysUInt)]
+        public UIntPtr maxMem;
         /// <summary>
         /// The memory in KBytes used by the domain.
         /// </summary>
-        public ulong memory;
+        [MarshalAs(UnmanagedType.SysUInt)]
+        public UIntPtr memory;
         /// <summary>
         /// The number of virtual CPUs for the domain.
         /// </summary>
@@ -621,7 +623,12 @@ namespace Libvirt
         /// <summary>
         /// The CPU time used in nanoseconds.
         /// </summary>
-        public ulong cpuTime;
+        [MarshalAs(UnmanagedType.SysUInt)]
+        public UIntPtr cpuTime;
+        /// <summary>
+        /// The running state, one of virDomainState.
+        /// </summary>
+        public DomainState State { get { return (DomainState)state; } }
     }
     #endregion
 
