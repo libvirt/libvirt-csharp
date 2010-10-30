@@ -8,6 +8,9 @@
 
 namespace Libvirt
 {
+    /// <summary>
+    /// The Stream class expose all libvirt stream related functions
+    /// </summary>
     public class Stream
     {
         // TODO virStreamAbort

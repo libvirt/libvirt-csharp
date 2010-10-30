@@ -11,6 +11,9 @@ using System.Runtime.InteropServices;
 
 namespace Libvirt
 {
+    /// <summary>
+    /// The Network clas expose all libvirt network related functions
+    /// </summary>
     public class Network
     {
         /// <summary>

@@ -10,6 +10,9 @@ using System.Runtime.InteropServices;
 
 namespace Libvirt
 {
+    /// <summary>
+    /// The Event class expose all the event related methods
+    /// </summary>
     public class Event
     {
         ///<summary>

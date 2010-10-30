@@ -38,7 +38,7 @@ namespace Libvirt
         /// A <see cref="IntPtr"/>pointer to the user data provided in the handler callback.
         /// </param>
         /// <param name="handler">
-        /// A <see cref="virErrorFunc"/>function to get called in case of error or NULL
+        /// A <see cref="ErrorFunc"/>function to get called in case of error or NULL
         /// </param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virConnSetErrorFunc")]
         public static extern void ConnSetErrorFunc(IntPtr conn, IntPtr userData, [MarshalAs(UnmanagedType.FunctionPtr)] ErrorFunc handler);
@@ -49,7 +49,7 @@ namespace Libvirt
         /// One will need to free the result with virResetError().
         /// </summary>
         /// <param name="to">
-        /// A <see cref="virError"/> target to receive the copy.
+        /// A <see cref="Error"/> target to receive the copy.
         /// </param>
         /// <returns>
         /// 0 if no error was found and the error code otherwise and -1 in case of parameter error.
@@ -61,7 +61,7 @@ namespace Libvirt
         /// Default routine reporting an error to stderr.
         /// </summary>
         /// <param name="err">
-        /// A <see cref="virError"/> pointer to the error.
+        /// A <see cref="Error"/> pointer to the error.
         /// </param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDefaultErrorFunc")]
         public static extern void DefaultErrorFunc([In] Error err);
@@ -70,7 +70,7 @@ namespace Libvirt
         /// Resets and frees the given error.
         /// </summary>
         /// <param name="err">
-        /// A <see cref="virError"/> error to free.
+        /// A <see cref="Error"/> error to free.
         /// </param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virFreeError")]
         public static extern void FreeError(Error err); // Does not work, anybody know why?
@@ -89,7 +89,7 @@ namespace Libvirt
         /// Reset the error being pointed to.
         /// </summary>
         /// <param name="err">
-        /// A <see cref="virError"/> pointer to the to clean up.
+        /// A <see cref="Error"/> pointer to the to clean up.
         /// </param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virResetError")]
         public static extern void ResetError(Error err);
@@ -105,7 +105,7 @@ namespace Libvirt
         /// Save the last error into a new error object.
         /// </summary>
         /// <returns>
-        /// A <see cref="virError"/> pointer to the copied error or NULL if allocation failed.
+        /// A <see cref="Error"/> pointer to the copied error or NULL if allocation failed.
         /// It is the caller's responsibility to free the error with virFreeError().
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virSaveLastError")]
@@ -119,7 +119,7 @@ namespace Libvirt
         /// A <see cref="IntPtr"/>pointer to the user data provided in the handler callback.
         /// </param>
         /// <param name="handler">
-        /// A <see cref="virErrorFunc"/>function to get called in case of error or NULL.
+        /// A <see cref="ErrorFunc"/>function to get called in case of error or NULL.
         /// </param>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virSetErrorFunc")]
         public static extern void SetErrorFunc(IntPtr userData, [MarshalAs(UnmanagedType.FunctionPtr)] ErrorFunc handler);

@@ -8,6 +8,9 @@
 
 namespace Libvirt
 {
+    /// <summary>
+    /// The Secret class expose all libvirt secret related functions
+    /// </summary>
     public class Secret
     {
         // TODO virSecretDefineXML

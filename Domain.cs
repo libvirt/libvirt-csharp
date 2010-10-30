@@ -11,6 +11,9 @@ using System.Runtime.InteropServices;
 
 namespace Libvirt
 {
+    /// <summary>
+    /// The Domain class expose the domains related methods
+    /// </summary>
     public class Domain
     {
         /// <summary>
@@ -314,7 +317,7 @@ namespace Libvirt
         /// Path to the interface.
         /// </param>
         /// <param name="stats">
-        /// A <see cref="virDomainInterfaceStatsStruct"/>network interface stats (returned).
+        /// A <see cref="DomainInterfaceStatsStruct"/>network interface stats (returned).
         /// </param>
         /// <param name="size">
         /// Size of stats structure.

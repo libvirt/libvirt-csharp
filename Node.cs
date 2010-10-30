@@ -11,6 +11,9 @@ using System.Runtime.InteropServices;
 
 namespace Libvirt
 {
+    /// <summary>
+    /// The Node class expose all libvirt node related functions
+    /// </summary>
     public class Node
     {
 		private const int MaxStringLength = 1024;

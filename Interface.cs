@@ -8,6 +8,9 @@
 
 namespace Libvirt
 {
+    /// <summary>
+    /// The Interface class expose all interface related methods
+    /// </summary>
     public class Interface
     {
         // TODO virInterfaceCreate

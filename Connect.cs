@@ -11,6 +11,9 @@ using System.Runtime.InteropServices;
 
 namespace Libvirt
 {
+    /// <summary>
+    /// The Connect class expose all connection related methods
+    /// </summary>
     public class Connect
     {
         private const int MaxStringLength = 1024;

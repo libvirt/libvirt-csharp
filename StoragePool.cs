@@ -11,6 +11,9 @@ using System.Runtime.InteropServices;
 
 namespace Libvirt
 {
+    /// <summary>
+    /// The StoragePool class expose all libvirt storage pool related functions
+    /// </summary>
     public class StoragePool
     {
 		private const int MaxStringLength = 1024;
@@ -90,7 +93,7 @@ namespace Libvirt
         /// A <see cref="IntPtr"/>pointer to storage pool.
         /// </param>
         /// <param name="flags">
-        /// A <see cref="virStoragePoolDeleteFlags"/>flags for obliteration process.
+        /// A <see cref="StoragePoolDeleteFlags"/>flags for obliteration process.
         /// </param>
         /// <returns>
         /// 0 on success, or -1 if it could not be obliterate.

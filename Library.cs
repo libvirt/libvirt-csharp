@@ -10,6 +10,9 @@ using System.Runtime.InteropServices;
 
 namespace Libvirt
 {
+    /// <summary>
+    /// The Library class expose all libvirt library related methods
+    /// </summary>
     public class Library
     {
         /// <summary>
