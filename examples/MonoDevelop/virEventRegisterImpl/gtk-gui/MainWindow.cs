@@ -59,7 +59,6 @@ public partial class MainWindow
 		this.GtkScrolledWindow.ShadowType = ((global::Gtk.ShadowType)(1));
 		// Container child GtkScrolledWindow.Gtk.Container+ContainerChild
 		this.textview1 = new global::Gtk.TextView ();
-		this.textview1.Buffer.Text = "test";
 		this.textview1.CanFocus = true;
 		this.textview1.Name = "textview1";
 		this.GtkScrolledWindow.Add (this.textview1);

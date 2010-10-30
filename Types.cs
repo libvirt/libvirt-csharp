@@ -140,7 +140,7 @@ namespace Libvirt
     /// the virError object
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Error
+    public class Error
     {
         /// <summary>
         /// The error code, a virErrorNumber.
@@ -155,7 +155,6 @@ namespace Libvirt
         /// <summary>
         /// Human-readable informative error message.
         /// </summary>
-        [MarshalAs(UnmanagedType.SysInt)]
         private IntPtr message;
         /// <summary>
         /// Human-readable informative error message.
@@ -173,17 +172,14 @@ namespace Libvirt
         /// <summary>
         /// Connection if available, deprecated see note above.
         /// </summary>
-        [MarshalAs(UnmanagedType.SysInt)]
         public IntPtr conn;
         /// <summary>
         /// Domain if available, deprecated see note above.
         /// </summary>
-        [MarshalAs(UnmanagedType.SysInt)]
         public IntPtr dom;
         /// <summary>
         /// Extra string information.
         /// </summary>
-        [MarshalAs(UnmanagedType.SysInt)]
         private IntPtr str1;
         /// <summary>
         /// Extra string information.
@@ -201,7 +197,6 @@ namespace Libvirt
         /// <summary>
         /// Extra string information.
         /// </summary>
-        [MarshalAs(UnmanagedType.SysInt)]
         private IntPtr str3;
         /// <summary>
         /// Extra string information.
@@ -220,7 +215,6 @@ namespace Libvirt
         /// <summary>
         /// Network if available, deprecated see note above.
         /// </summary>
-        [MarshalAs(UnmanagedType.SysInt)]
         public IntPtr net;
     }
 

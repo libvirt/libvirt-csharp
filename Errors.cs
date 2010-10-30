@@ -83,7 +83,7 @@ namespace Libvirt
         /// A pointer to the last error or NULL if none occurred.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virGetLastError")]
-        public static extern int GetLastError();
+        public static extern Error GetLastError();
 
         /// <summary>
         /// Reset the error being pointed to.
