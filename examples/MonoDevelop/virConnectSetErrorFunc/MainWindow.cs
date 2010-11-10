@@ -45,13 +45,21 @@ public partial class MainWindow : Gtk.Window
 			Errors.SetErrorFunc(IntPtr.Zero, ErrorCallback);
 			// Try to look up the domain by name
 			IntPtr domain = Domain.LookupByName(conn, entry2.Text);
-            DomainInfo di = new DomainInfo();
-            Domain.GetInfo(domain, di);
-			entry3.Text = di.State.ToString();
-			entry4.Text = di.maxMem.ToString();
-			entry5.Text = di.memory.ToString();
-			entry6.Text = di.nrVirtCpu.ToString();
-			entry7.Text = di.cpuTime.ToString();
+			
+			if (domain != IntPtr.Zero)
+			{
+				DomainInfo di = new DomainInfo();
+				Domain.GetInfo(domain, di);
+				entry3.Text = di.State.ToString();
+				entry4.Text = di.maxMem.ToString();
+				entry5.Text = di.memory.ToString();
+				entry6.Text = di.nrVirtCpu.ToString();
+				entry7.Text = di.cpuTime.ToString();
+			
+				Domain.Free(domain);
+			}
+
+			Connect.Close(conn);
 		}
 		else
 		{
@@ -76,4 +84,3 @@ public partial class MainWindow : Gtk.Window
 		}
 	}
 }
-
