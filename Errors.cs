@@ -83,8 +83,21 @@ namespace Libvirt
         /// A pointer to the last error or NULL if none occurred.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virGetLastError")]
-        public static extern Error GetLastError();
-
+        private static extern IntPtr virGetLastError();
+        /// <summary>
+        /// Provide the last error caught at the library level. 
+        /// The error object is kept in thread local storage, so separate threads can safely access this concurrently.
+        /// </summary>
+        /// <returns>
+        /// The last error or NULL if none occurred.
+        /// </returns>
+        public static Error GetLastError()
+        {
+            IntPtr errPtr = virGetLastError();
+            if (errPtr == IntPtr.Zero) return null;
+            Error err = (Error) Marshal.PtrToStructure(errPtr, typeof (Error));
+            return err;
+        }
         /// <summary>
         /// Reset the error being pointed to.
         /// </summary>
