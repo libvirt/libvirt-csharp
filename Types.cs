@@ -222,27 +222,32 @@ namespace Libvirt
     /// Blocks domain statistics
     ///</summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct DomainBlockStatsStruct
+    public class DomainBlockStatsStruct
     {
         /// <summary>
         /// Number of read requests.
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long rd_req;
         /// <summary>
         /// Number of read bytes.
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long rd_bytes;
         /// <summary>
         /// Number of write requests.
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long wr_req;
         /// <summary>
         /// Number of written bytes.
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long wr_bytes;
         /// <summary>
         /// In Xen this returns the mysterious 'oo_req'.
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long errs;
     }
 
@@ -250,39 +255,47 @@ namespace Libvirt
     /// Domain interface statistics
     ///</summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct DomainInterfaceStatsStruct
+    public class DomainInterfaceStatsStruct
     {
         ///<summary>
         /// Bytes received
         ///</summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long rx_bytes;
         /// <summary>
         /// Packets received
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long rx_packets;
         /// <summary>
         /// Errors received
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long rx_errs;
         /// <summary>
         /// Drops received
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long rx_drop;
         /// <summary>
         /// Bytes sended
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long tx_bytes;
         /// <summary>
         /// Packets sended
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long tx_packets;
         /// <summary>
         /// Errors sended
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long tx_errs;
         /// <summary>
         /// Drops sended
         /// </summary>
+        [MarshalAs(UnmanagedType.I8)]
         public long tx_drop;
     }
 
@@ -486,7 +499,7 @@ namespace Libvirt
     /// Structure for domain memory statistics
     ///</summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct DomainMemoryStat
+    public class DomainMemoryStat
     {
         /// <summary>
         /// Tag
@@ -554,7 +567,8 @@ namespace Libvirt
     /// <summary>
     /// Structure to handle node informations
     /// </summary>
-    public struct NodeInfo
+    [StructLayout(LayoutKind.Sequential)]
+    public class NodeInfo
     {
         /// <summary>
         /// String indicating the CPU model.
@@ -564,31 +578,38 @@ namespace Libvirt
         /// <summary>
         /// Memory size in kilobytes
         /// </summary>
-        public ulong memory;
+        [MarshalAs(UnmanagedType.SysUInt)]
+        public UIntPtr memory;
         /// <summary>
         /// The number of active CPUs.
         /// </summary>
-        public uint cpus;
+        [MarshalAs(UnmanagedType.SysUInt)]
+        public UIntPtr cpus;
         /// <summary>
         /// Expected CPU frequency.
         /// </summary>
-        public uint mhz;
+        [MarshalAs(UnmanagedType.SysUInt)]
+        public UIntPtr mhz;
         /// <summary>
         /// The number of NUMA cell, 1 for uniform mem access.
         /// </summary>
-        public uint nodes;
+        [MarshalAs(UnmanagedType.SysUInt)]
+        public UIntPtr nodes;
         /// <summary>
         /// Number of CPU socket per node.
         /// </summary>
-        public uint sockets;
+        [MarshalAs(UnmanagedType.SysUInt)]
+        public UIntPtr sockets;
         /// <summary>
         /// Number of core per socket.
         /// </summary>
-        public uint cores;
+        [MarshalAs(UnmanagedType.SysUInt)]
+        public UIntPtr cores;
         /// <summary>
         /// Number of threads per core.
         /// </summary>
-        public uint threads;
+        [MarshalAs(UnmanagedType.SysUInt)]
+        public UIntPtr threads;
     }
     /// <summary>
     /// Structure to handle domain informations

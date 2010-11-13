@@ -45,7 +45,25 @@ namespace Libvirt
         /// <param name="size">size of stats structure</param>
         /// <returns>0 in case of success or -1 in case of failure.</returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainBlockStats")]
-        public static extern int BlockStats(IntPtr dom, string path, DomainBlockStatsStruct stats, int size);
+        private static extern int BlockStats(IntPtr dom, string path, IntPtr stats, int size);
+        /// <summary>
+        /// This function returns block device (disk) stats for block devices attached to the domain. The path parameter is the name of the block device. Get this by calling virDomainGetXMLDesc and finding the target dev='...' attribute within //domain/devices/disk. (For example, "xvda"). Domains may have more than one block device. To get stats for each you should make multiple calls to this function. Individual fields within the stats structure may be returned as -1, which indicates that the hypervisor does not support that particular statistic.
+        /// </summary>
+        /// <param name="dom">pointer to the domain object</param>
+        /// <param name="path">path to the block device</param>
+        /// <param name="stats">block device stats (returned)</param>
+        /// <returns>0 in case of success or -1 in case of failure.</returns>
+        public static int BlockStats(IntPtr dom, string path, out DomainBlockStatsStruct stats)
+        {
+            DomainBlockStatsStruct statStruct = new DomainBlockStatsStruct();
+            IntPtr statStructPtr = Marshal.AllocHGlobal(Marshal.SizeOf(statStruct));
+            Marshal.StructureToPtr(statStruct, statStructPtr, true);
+            int result = BlockStats(dom, path, statStructPtr, Marshal.SizeOf(statStruct));
+            Marshal.PtrToStructure(statStructPtr, statStruct);
+            stats = statStruct;
+            Marshal.FreeHGlobal(statStructPtr);
+            return result;
+        }
         /// <summary>
         /// This method will dump the core of a domain on a given file for analysis. Note that for remote Xen Daemon the file path will be interpreted in the remote host.
         /// </summary>
@@ -326,7 +344,35 @@ namespace Libvirt
         /// 0 in case of success or -1 in case of failure.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainInterfaceStats")]
-        public static extern int InterfaceStats(IntPtr dom, string path, DomainInterfaceStatsStruct stats, int size);
+        private static extern int InterfaceStats(IntPtr dom, string path, IntPtr stats, int size);
+        /// <summary>
+        /// This function returns network interface stats for interfaces attached to the domain.
+        /// The path parameter is the name of the network interface. Domains may have more than one network interface.
+        /// To get stats for each you should make multiple calls to this function.
+        /// Individual fields within the stats structure may be returned as -1,
+        /// which indicates that the hypervisor does not support that particular statistic.
+        /// </summary>
+        /// <param name="dom">
+        /// A <see cref="IntPtr"/>pointer to the domain object.
+        /// </param>
+        /// <param name="path">
+        /// Path to the interface.
+        /// </param>
+        /// <param name="stats">
+        /// A <see cref="DomainInterfaceStatsStruct"/>network interface stats (returned).
+        /// </param>
+        /// <returns>0 in case of success or -1 in case of failure.</returns>
+        public static int InterfaceStats(IntPtr dom, string path, out DomainInterfaceStatsStruct stats)
+        {
+            DomainInterfaceStatsStruct statStruct = new DomainInterfaceStatsStruct();
+            IntPtr statStructPtr = Marshal.AllocHGlobal(Marshal.SizeOf(statStruct));
+            Marshal.StructureToPtr(statStruct, statStructPtr, true);
+            int result = InterfaceStats(dom, path, statStructPtr, Marshal.SizeOf(statStruct));
+            Marshal.PtrToStructure(statStructPtr, statStruct);
+            stats = statStruct;
+            Marshal.FreeHGlobal(statStructPtr);
+            return result;
+        }
         /// <summary>
         /// Determine if the domain is currently running.
         /// </summary>
@@ -421,7 +467,7 @@ namespace Libvirt
 
         // TODO virDomainPinVcpu
 
-        // TODO virDomainMemoryStats
+        // TODO virDomainMemoryStats : Currently disabled in QEMU
 
         /// <summary>
         /// Reboot a domain, the domain object is still usable there after but the domain OS is being stopped for a restart.
