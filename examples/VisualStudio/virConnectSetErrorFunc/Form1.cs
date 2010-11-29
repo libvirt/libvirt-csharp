@@ -48,3 +48,22 @@ namespace virConnectSetErrorFunc
                 textBox4.Text = di.nrVirtCpu.ToString();
                 textBox5.Text = di.cpuTime.ToString();
             }
+            else
+            {
+                Error error = Errors.GetLastError();
+                ShowError(error);
+            }
+        }
+
+        private void ErrorCallback(IntPtr userData, Error error)
+        {
+            ShowError(error);
+        }
+
+        private void ShowError(Error libvirtError)
+        {
+            string ErrorBoxMessage = string.Format("Error number : {0}. Error message : {1}", libvirtError.code, libvirtError.Message);
+            MessageBox.Show(ErrorBoxMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+}
