@@ -80,7 +80,7 @@ namespace Libvirt
         /// <param name="autostart">the value returned</param>
         /// <returns>-1 in case of error, 0 in case of success</returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virNetworkGetAutostart")]
-        public static extern int GetAutostart(IntPtr network, int autostart);
+        public static extern int GetAutostart(IntPtr network, ref int autostart);
         /// <summary>
         /// Provides a bridge interface name to which a domain may connect a network interface in order to join the network.
         /// </summary>
@@ -111,18 +111,19 @@ namespace Libvirt
         /// <param name="uuid">string of the uuid</param>
         /// <returns>-1 in case of error, 0 in case of success</returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virNetworkGetUUIDString")]
-        private static extern int GetUUIDString(IntPtr network, [Out] char[] uuid);
+        private static extern int GetUUIDString(IntPtr network, [Out] byte[] uuid);
 
         ///<summary>
         /// Get the UUID for a network as string
         ///</summary>
         ///<param name="network">a network object, a netowrk IntPtr</param>
         ///<returns>string of the uuid</returns>
-        public static string virNetworkGetUUIDString(IntPtr network)
+        public static string GetUUIDString(IntPtr network)
         {
-            char[] uuidArray = new char[36];
-            GetUUIDString(network, uuidArray);
-            return new string(uuidArray);
+            byte[] uuidArray = new byte[36];
+            if (GetUUIDString(network, uuidArray) == 0)
+                return System.Text.Encoding.UTF8.GetString(uuidArray);
+            throw new Exception("Error at native GetUUIDString call");
         }
         /// <summary>
         /// Provide an XML description of the network. The description may be reused later to relaunch the network with virNetworkCreateXML().
