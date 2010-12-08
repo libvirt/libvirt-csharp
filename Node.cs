@@ -112,7 +112,7 @@ namespace Libvirt
         /// The number of node devices found or -1 in case of error.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virNodeListDevices")]
-        public static extern int ListDevices(IntPtr conn, string cap, IntPtr names, int maxnames, uint flags);
+        private static extern int ListDevices(IntPtr conn, string cap, IntPtr names, int maxnames, uint flags);
         /// <summary>
         /// Collect the list of node devices, and store their names in @names.
         /// If the optional 'cap' argument is non-NULL, then the count will be restricted to devices with the specified capability.
@@ -135,7 +135,7 @@ namespace Libvirt
         /// <returns>
         /// The number of node devices found or -1 in case of error.
         /// </returns>
-        public static int virNodeListDevices(IntPtr conn, string cap, ref string[] names, int maxnames, uint flags)
+        public static int ListDevices(IntPtr conn, string cap, ref string[] names, int maxnames, uint flags)
         {
             IntPtr namesPtr = Marshal.AllocHGlobal(MaxStringLength);
             int count = ListDevices(conn, cap, namesPtr, maxnames, 0);

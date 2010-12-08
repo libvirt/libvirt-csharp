@@ -219,7 +219,7 @@ namespace Libvirt
         /// A <see cref="IntPtr"/>pointer to storage pool.
         /// </param>
         ///<returns>the storage pool UUID</returns>
-        public static string virStoragePoolGetUUIDString(IntPtr pool)
+        public static string GetUUIDString(IntPtr pool)
         {
             char[] uuidArray = new char[36];
             GetUUIDString(pool, uuidArray);
@@ -298,7 +298,7 @@ namespace Libvirt
         /// <returns>
         /// The number of names fetched, or -1 on error.
         /// </returns>
-        public static int virStoragePoolListVolumes(IntPtr pool, ref string[] names, int maxnames)
+        public static int ListVolumes(IntPtr pool, ref string[] names, int maxnames)
         {
             IntPtr namesPtr = Marshal.AllocHGlobal(MaxStringLength);
             int count = ListVolumes(pool, namesPtr, maxnames);
