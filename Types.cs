@@ -118,6 +118,14 @@ namespace Libvirt
     /// <param name="cbdata">user data passed to callback</param>
     /// <returns></returns>
     public delegate int ConnectAuthCallback(ref ConnectCredential[] creds, IntPtr cbdata);
+	/// <summary>
+	/// Callback for receiving stream events. The callback will be invoked once for each event which is pending.
+	/// </summary>
+	/// <param name="stream">stream on which the event occurred</param>
+	/// <param name="events">bitset of events from virEventHandleType constants</param>
+	/// <param name="opaque">user data registered with handle</param>
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	public delegate void StreamEventCallback(IntPtr stream, int events, IntPtr opaque);
     #endregion
 
     #region structs
