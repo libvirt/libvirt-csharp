@@ -126,6 +126,21 @@ namespace Libvirt
 	/// <param name="opaque">user data registered with handle</param>
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	public delegate void StreamEventCallback(IntPtr stream, int events, IntPtr opaque);
+	/// <summary>
+	/// The virStreamSinkFunc callback is used together with the virStreamRecvAll function for libvirt
+	/// to provide the data that has been received. The callback will be invoked multiple times, providing
+	/// data in small chunks. The application should consume up 'nbytes' from the 'data' array of data and
+	/// then return the number actual number of bytes consumed. The callback will continue to be invoked until
+	/// it indicates the end of the stream has been reached. A return value of -1 at any time will abort the
+	/// receive operation
+	/// </summary>
+	/// <param name="st">the stream object</param>
+	/// <param name="data">preallocated array to be filled with data</param>
+	/// <param name="nbytes">size of the data array</param>
+	/// <param name="opaque">optional application provided data</param>
+	/// <returns>the number of bytes filled, 0 upon end of file, or -1 upon error</returns>
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	public delegate int StreamSinkFunc(IntPtr st, IntPtr data, int nbytes, IntPtr opaque);
     #endregion
 
     #region structs

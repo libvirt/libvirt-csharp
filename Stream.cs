@@ -94,12 +94,62 @@ namespace Libvirt
 		/// <returns>the new stream, or NULL upon error</returns>
 		[DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virStreamNew")]
 		public static extern int New(IntPtr conn, uint flags);
-
-        // TODO virStreamRecv
-
-        // TODO virStreamRecvAll
-
-        // TODO virStreamRef
+		/// <summary>
+		/// Reads a series of bytes from the stream. This method may block the calling application
+		/// for an arbitrary amount of time. Errors are not guaranteed to be reported synchronously
+		/// with the call, but may instead be delayed until a subsequent call.
+		/// </summary>
+		/// <param name="stream">
+		/// pointer to the stream object
+		/// </param>
+		/// <param name="data">
+		/// buffer to read into from stream
+		/// </param>
+		/// <param name="size">
+		/// size of @data buffer
+		/// </param>
+		/// <returns>
+		/// the number of bytes read, which may be less than requested.Returns 0 when the end of the stream
+		/// is reached, at which time the caller should invoke virStreamFinish() to get confirmation of stream
+		/// completion. Returns -1 upon error, at which time the stream will be marked as aborted,
+		/// and the caller should now release the stream with virStreamFree. Returns -2 if there is no
+		/// data pending to be read & the stream is marked as non-blocking.
+		/// </returns>
+		[DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virStreamRecv")]
+		public static extern int Recv(IntPtr stream, IntPtr data, int size);
+		/// <summary>
+		/// Receive the entire data stream, sending the data to the requested data sink. This is simply a
+		/// convenient alternative to virStreamRecv, for apps that do blocking-I/O.
+		/// </summary>
+		/// <param name="stream">
+		/// pointer to the stream object
+		/// </param>
+		/// <param name="handler">
+		/// sink callback for writing data to application
+		/// </param>
+		/// <param name="opaque">
+		/// application defined data
+		/// </param>
+		/// <returns>
+		/// 0 if all the data was successfully received. The caller should invoke virStreamFinish(st) to flush
+		/// the stream upon success and then virStreamFree Returns -1 upon any error, with virStreamAbort()
+		/// already having been called, so the caller need only call virStreamFree()
+		/// </returns>
+		[DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virStreamRecvAll")]
+		public static extern int RecvAll(IntPtr stream, [MarshalAs(UnmanagedType.FunctionPtr)] StreamSinkFunc handler, IntPtr opaque);
+		/// <summary>
+		/// Increment the reference count on the stream. For each additional call to this method, there shall be a
+		/// corresponding call to virStreamFree to release the reference count, once the caller no longer needs
+		/// the reference to this object.
+		/// </summary>
+		/// <param name="stream">
+		/// pointer to the stream
+		/// </param>
+		/// <returns>
+		/// 0 in case of success, -1 in case of failure
+		/// </returns>
+		[DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virStreamRef")]
+		public static extern int Ref(IntPtr stream);
 
         // TODO virStreamSend
 
