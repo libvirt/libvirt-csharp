@@ -14,7 +14,7 @@ then
     exit 1
 fi
 
-HOSTS=$($LCITOOL hosts | grep -E "(debian-9|fedora)")
+HOSTS=$($LCITOOL hosts | grep -E "(fedora)")
 
 for host in $HOSTS
 do
