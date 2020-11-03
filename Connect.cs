@@ -31,7 +31,7 @@ namespace Libvirt
         /// <param name="conn">pointer to the hypervisor connection</param>
         /// <returns>NULL in case of error, or an XML string defining the capabilities. The client must free the returned string after use.</returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virConnectGetCapabilities")]
-        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
+        [return: MarshalAs(UnmanagedType.LPStr)]
         public static extern string GetCapabilities(IntPtr conn);
         /// <summary>
         /// This returns the system hostname on which the hypervisor is running (the result of the gethostname system call). If we are connected to a remote system, then this returns the hostname of the remote system.
@@ -39,7 +39,7 @@ namespace Libvirt
         /// <param name="conn">pointer to a hypervisor connection</param>
         /// <returns>the hostname which must be freed by the caller, or NULL if there was an error.</returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virConnectGetHostname")]
-        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
+        [return: MarshalAs(UnmanagedType.LPStr)]
         public static extern string GetHostname(IntPtr conn);
         /// <summary>
         /// Provides @libVer, which is the version of libvirt used by the daemon running on the @conn host
@@ -71,7 +71,7 @@ namespace Libvirt
         /// <param name="conn">pointer to a hypervisor connection</param>
         /// <returns>the Uri string which must be freed by the caller, or NULL if there was an error.</returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virConnectGetURI")]
-        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
+        [return: MarshalAs(UnmanagedType.LPStr)]
         public static extern string GetURI(IntPtr conn);
         /// <summary>
         /// Get the version level of the Hypervisor running. This may work only with hypervisor call, i.e. with privileged access to the hypervisor, not with a Read-Only connection.

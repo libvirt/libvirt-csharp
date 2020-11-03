@@ -87,7 +87,7 @@ namespace Libvirt
         /// <param name="network">a network object</param>
         /// <returns>a 0 terminated interface name, or NULL in case of error. the caller must free() the returned value</returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virNetworkGetBridgeName")]
-        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
+        [return: MarshalAs(UnmanagedType.LPStr)]
         public static extern string GetBridgeName(IntPtr network);
         /// <summary>
         /// Provides the connection pointer associated with a network. The reference counter on the connection is not increased by this call. WARNING: When writing libvirt bindings in other languages, do not use this function. Instead, store the connection and the network object together
@@ -132,7 +132,7 @@ namespace Libvirt
         /// <param name="flags">an OR'ed set of extraction flags, not used yet</param>
         /// <returns>a 0 terminated UTF-8 encoded XML instance, or NULL in case of error. the caller must free() the returned value</returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virNetworkGetXMLDesc")]
-        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
+        [return: MarshalAs(UnmanagedType.LPStr)]
         public static extern string GetXMLDesc(IntPtr network, int flags);
         /// <summary>
         /// Determine if the network is currently running

@@ -266,7 +266,7 @@ namespace Libvirt
         /// The new string or NULL in case of error, the string must be freed by the caller.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainGetOSType")]
-        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
+        [return: MarshalAs(UnmanagedType.LPStr)]
         public static extern string GetOSType(IntPtr domain);
 
         // TODO virDomainGetSchedulerParameters
@@ -319,7 +319,7 @@ namespace Libvirt
         /// A 0 terminated UTF-8 encoded XML instance, or NULL in case of error. the caller must free() the returned value.
         /// </returns>
         [DllImport("libvirt-0.dll", CallingConvention = CallingConvention.Cdecl, EntryPoint = "virDomainGetXMLDesc")]
-        [return: MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringWithoutNativeCleanUpMarshaler))]
+        [return: MarshalAs(UnmanagedType.LPStr)]
         public static extern string GetXMLDesc(IntPtr domain, int flags);
         /// <summary>
         /// This function returns network interface stats for interfaces attached to the domain.
