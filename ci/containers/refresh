@@ -18,7 +18,7 @@ HOSTS=$($LCITOOL hosts | grep -E "(fedora)")
 
 for host in $HOSTS
 do
-    if test "$host" = "libvirt-fedora-32"
+    if test "$host" = "libvirt-fedora-33"
     then
         $LCITOOL dockerfile $host libvirt+minimal,libvirt+dist,libvirt-csharp > $host.Dockerfile
     else
