@@ -1,8 +1,9 @@
 # THIS FILE WAS AUTO-GENERATED
 #
-#  $ lcitool dockerfile fedora-33 libvirt+minimal,libvirt+dist,libvirt-csharp
+#  $ lcitool manifest ci/manifest.yml
 #
-# https://gitlab.com/libvirt/libvirt-ci/-/commit/d527e0c012f476c293f3bc801b7da08bc85f98ef
+# https://gitlab.com/libvirt/libvirt-ci
+
 FROM registry.fedoraproject.org/fedora:33
 
 RUN dnf install -y nosync && \
@@ -19,6 +20,7 @@ exec "$@"' > /usr/bin/nosync && \
     nosync dnf install -y \
         ca-certificates \
         ccache \
+        cpp \
         gcc \
         gettext \
         git \
@@ -37,7 +39,7 @@ exec "$@"' > /usr/bin/nosync && \
         mono-devel \
         monodevelop \
         ninja-build \
-        perl \
+        perl-base \
         pkgconfig \
         python3 \
         python3-docutils \
@@ -47,7 +49,7 @@ exec "$@"' > /usr/bin/nosync && \
     rpm -qa | sort > /packages.txt && \
     mkdir -p /usr/libexec/ccache-wrappers && \
     ln -s /usr/bin/ccache /usr/libexec/ccache-wrappers/cc && \
-    ln -s /usr/bin/ccache /usr/libexec/ccache-wrappers/$(basename /usr/bin/gcc)
+    ln -s /usr/bin/ccache /usr/libexec/ccache-wrappers/gcc
 
 ENV LANG "en_US.UTF-8"
 ENV MAKE "/usr/bin/make"
