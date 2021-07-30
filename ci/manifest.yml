@@ -1,0 +1,25 @@
+projects:
+  - libvirt-csharp
+  - libvirt+dist
+
+gitlab:
+  namespace: libvirt
+  project: libvirt-csharp
+
+targets:
+  fedora-33:
+    projects:
+      - libvirt-csharp
+      - libvirt+dist
+      - libvirt+minimal
+
+    jobs:
+      - arch: x86_64
+
+      - arch: x86_64
+        suffix: -git
+        template: .native_git_build_job
+
+  fedora-34: x86_64
+
+  fedora-rawhide: x86_64
