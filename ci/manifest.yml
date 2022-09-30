@@ -7,7 +7,7 @@ gitlab:
   project: libvirt-csharp
 
 targets:
-  fedora-33:
+  fedora-35:
     projects:
       - libvirt-csharp
       - libvirt+dist
@@ -20,6 +20,6 @@ targets:
         suffix: -git
         template: .native_git_build_job
 
-  fedora-34: x86_64
+  fedora-36: x86_64
 
   fedora-rawhide: x86_64

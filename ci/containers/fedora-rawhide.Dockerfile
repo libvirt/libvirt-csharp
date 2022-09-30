@@ -17,14 +17,14 @@ else\n\
 fi\n\
 exec "$@"' > /usr/bin/nosync && \
     chmod +x /usr/bin/nosync && \
-    nosync dnf update -y && \
+    nosync dnf distro-sync -y && \
     nosync dnf install -y \
-        ca-certificates \
-        git \
-        glibc-langpack-en \
-        libvirt-devel \
-        mono-devel \
-        monodevelop && \
+               ca-certificates \
+               git \
+               glibc-langpack-en \
+               libvirt-devel \
+               mono-devel \
+               monodevelop && \
     nosync dnf autoremove -y && \
     nosync dnf clean all -y && \
     rpm -qa | sort > /packages.txt
