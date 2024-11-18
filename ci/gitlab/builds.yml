@@ -7,73 +7,45 @@
 
 # Native build jobs
 
-x86_64-fedora-35-prebuilt-env:
-  extends: .native_build_job_prebuilt_env
+x86_64-fedora-39:
+  extends: .native_build_job
   needs:
-    - job: x86_64-fedora-35-container
+    - job: x86_64-fedora-39-container
       optional: true
   allow_failure: false
   variables:
-    NAME: fedora-35
-
-x86_64-fedora-35-local-env:
-  extends: .native_build_job_local_env
-  needs: []
-  allow_failure: false
-  variables:
-    IMAGE: registry.fedoraproject.org/fedora:35
-    NAME: fedora-35
+    NAME: fedora-39
+    TARGET_BASE_IMAGE: registry.fedoraproject.org/fedora:39
 
 
-x86_64-fedora-35-git-prebuilt-env:
-  extends: .native_git_build_job_prebuilt_env
+x86_64-fedora-39-git:
+  extends: .native_git_build_job
   needs:
-    - job: x86_64-fedora-35-container
+    - job: x86_64-fedora-39-container
       optional: true
   allow_failure: false
   variables:
-    NAME: fedora-35
-
-x86_64-fedora-35-git-local-env:
-  extends: .native_git_build_job_local_env
-  needs: []
-  allow_failure: false
-  variables:
-    IMAGE: registry.fedoraproject.org/fedora:35
-    NAME: fedora-35
+    NAME: fedora-39
+    TARGET_BASE_IMAGE: registry.fedoraproject.org/fedora:39
 
 
-x86_64-fedora-36-prebuilt-env:
-  extends: .native_build_job_prebuilt_env
+x86_64-fedora-40:
+  extends: .native_build_job
   needs:
-    - job: x86_64-fedora-36-container
+    - job: x86_64-fedora-40-container
       optional: true
   allow_failure: false
   variables:
-    NAME: fedora-36
-
-x86_64-fedora-36-local-env:
-  extends: .native_build_job_local_env
-  needs: []
-  allow_failure: false
-  variables:
-    IMAGE: registry.fedoraproject.org/fedora:36
-    NAME: fedora-36
+    NAME: fedora-40
+    TARGET_BASE_IMAGE: registry.fedoraproject.org/fedora:40
 
 
-x86_64-fedora-rawhide-prebuilt-env:
-  extends: .native_build_job_prebuilt_env
+x86_64-fedora-rawhide:
+  extends: .native_build_job
   needs:
     - job: x86_64-fedora-rawhide-container
       optional: true
-  allow_failure: false
+  allow_failure: true
   variables:
     NAME: fedora-rawhide
-
-x86_64-fedora-rawhide-local-env:
-  extends: .native_build_job_local_env
-  needs: []
-  allow_failure: false
-  variables:
-    IMAGE: registry.fedoraproject.org/fedora:rawhide
-    NAME: fedora-rawhide
+    TARGET_BASE_IMAGE: registry.fedoraproject.org/fedora:rawhide

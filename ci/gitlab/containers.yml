@@ -7,22 +7,22 @@
 
 # Native container jobs
 
-x86_64-fedora-35-container:
+x86_64-fedora-39-container:
   extends: .container_job
   allow_failure: false
   variables:
-    NAME: fedora-35
+    NAME: fedora-39
 
 
-x86_64-fedora-36-container:
+x86_64-fedora-40-container:
   extends: .container_job
   allow_failure: false
   variables:
-    NAME: fedora-36
+    NAME: fedora-40
 
 
 x86_64-fedora-rawhide-container:
   extends: .container_job
-  allow_failure: false
+  allow_failure: true
   variables:
     NAME: fedora-rawhide
